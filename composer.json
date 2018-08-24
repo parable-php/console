@@ -1,0 +1,32 @@
+{
+  "name": "parable-php/console",
+  "type": "library",
+  "description": "Parable Console is a terminal application building library",
+  "keywords": ["library", "terminal", "console", "framework", "parable"],
+  "homepage": "https://github.com/parable-php/console",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Robin de Graaf",
+      "email": "hello@devvoh.com",
+      "homepage": "https://devvoh.com"
+    }
+  ],
+  "require": {
+    "php": ">=7.1",
+    "parable-php/di": "^0.1.1"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^7.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Parable\\Console\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Parable\\Console\\Tests\\": "tests"
+    }
+  }
+}

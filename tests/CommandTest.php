@@ -121,14 +121,6 @@ class CommandTest extends AbstractTestClass
 
     public function testCommandCanCallOtherCommand()
     {
-//        $command = new \Parable\Tests\TestClasses\CommandCallsCommand();
-//        $command->prepare(
-//            $this->container->build(\Parable\Console\App::class),
-//            $this->container->build(\Parable\Console\Output::class),
-//            $this->container->build(\Parable\Console\Input::class),
-//            $this->container->build(\Parable\Console\Parameter::class)
-//        );
-
         $command = new class extends Command {
             protected $name = 'calling-command';
             protected $description = 'This is a test command.';
@@ -146,6 +138,7 @@ class CommandTest extends AbstractTestClass
                 return 'Command returned: ' . $this->runCommand($command2);
             }
         };
+
         $command->prepare(
             $this->container->get(App::class),
             $this->container->get(Output::class),

@@ -2,12 +2,7 @@
 
 namespace Parable\Console\Tests;
 
-use Parable\Console\App;
-use Parable\Console\Command;
 use Parable\Console\Environment;
-use Parable\Console\Input;
-use Parable\Console\Output;
-use Parable\Console\Parameter;
 
 class EnvironmentTest extends AbstractTestClass
 {

@@ -40,41 +40,6 @@ class OutputTest extends AbstractTestClass
             ->willReturn(false);
     }
 
-    /**
-     * NOTE: All write actions are appended with the default Tag from Output's tags array.
-     *
-     * Use only this method to compare actual output to string values written.
-     *
-     * @param string $expected
-     * @param string $actual
-     */
-    protected function assertSameWithTag($expected, $actual)
-    {
-        $expected = $this->addTag($expected);
-        $this->assertSame($expected, $actual);
-    }
-
-    /**
-     * Add the default tag where it's supposed to go.
-     *
-     * @param string $value
-     * @param int    $amount
-     * @return mixed|string
-     */
-    protected function addTag($value, $amount = 1)
-    {
-        $defaultTag = str_repeat($this->defaultTag, $amount);
-        if (strpos($value, "\n") !== false) {
-            // If there's new lines, the default tag is placed just before the newline.
-            // At the end of the string, there won't be another default tag.
-            $value = str_replace("\n", "{$defaultTag}\n", $value);
-        } else {
-            // If this is just a line with no newline, there will be a default tag at the end
-            $value = $value . $defaultTag;
-        }
-        return $value;
-    }
-
     public function testWrite()
     {
         $this->output->write('OK');
@@ -360,5 +325,40 @@ class OutputTest extends AbstractTestClass
 
         $output = $this->container->build(Output::class);
         $this->assertSame($this->addTag('<tag>unknown</tag>'), $output->parseTags('<tag>unknown</tag>'));
+    }
+
+    /**
+     * NOTE: All write actions are appended with the default Tag from Output's tags array.
+     *
+     * Use only this method to compare actual output to string values written.
+     *
+     * @param string $expected
+     * @param string $actual
+     */
+    protected function assertSameWithTag($expected, $actual)
+    {
+        $expected = $this->addTag($expected);
+        $this->assertSame($expected, $actual);
+    }
+
+    /**
+     * Add the default tag where it's supposed to go.
+     *
+     * @param string $value
+     * @param int    $amount
+     * @return mixed|string
+     */
+    protected function addTag($value, $amount = 1)
+    {
+        $defaultTag = str_repeat($this->defaultTag, $amount);
+        if (strpos($value, "\n") !== false) {
+            // If there's new lines, the default tag is placed just before the newline.
+            // At the end of the string, there won't be another default tag.
+            $value = str_replace("\n", "{$defaultTag}\n", $value);
+        } else {
+            // If this is just a line with no newline, there will be a default tag at the end
+            $value = $value . $defaultTag;
+        }
+        return $value;
     }
 }

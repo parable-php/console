@@ -4,6 +4,9 @@ namespace Parable\Console;
 
 class Input
 {
+    /**
+     * @var Environment
+     */
     protected $environment;
 
     /** @var string[] */

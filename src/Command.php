@@ -7,6 +7,18 @@ use Parable\Console\Parameter\Option;
 
 class Command
 {
+    /** @var App */
+    protected $app;
+
+    /** @var Output */
+    protected $output;
+
+    /** @var Input */
+    protected $input;
+
+    /** @var Parameter */
+    protected $parameter;
+
     /** @var string|null */
     protected $name;
 
@@ -21,18 +33,6 @@ class Command
 
     /** @var Argument[] */
     protected $arguments = [];
-
-    /** @var App|null */
-    protected $app;
-
-    /** @var Output|null */
-    protected $output;
-
-    /** @var Input|null */
-    protected $input;
-
-    /** @var Parameter|null */
-    protected $parameter;
 
     /**
      * Prepare the command, setting all classes the command is dependant on.

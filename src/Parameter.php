@@ -13,10 +13,10 @@ class Parameter
     const OPTION_VALUE_REQUIRED = 11;
     const OPTION_VALUE_OPTIONAL = 12;
 
-    /** @var array */
+    /** @var string[] */
     protected $parameters = [];
 
-    /** @var string|null */
+    /** @var string */
     protected $scriptName;
 
     /** @var string|null */

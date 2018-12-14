@@ -6,6 +6,9 @@ use Throwable;
 
 class Output
 {
+    /**
+     * @var Environment
+     */
     protected $environment;
 
     /** @var array */

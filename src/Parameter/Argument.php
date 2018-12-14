@@ -19,8 +19,8 @@ class Argument extends Base
      * @param mixed|null $defaultValue
      */
     public function __construct(
-        $name,
-        $required = Parameter::PARAMETER_OPTIONAL,
+        string $name,
+        int $required = Parameter::PARAMETER_OPTIONAL,
         $defaultValue = null
     ) {
         $this->setName($name);
@@ -42,6 +42,7 @@ class Argument extends Base
         )) {
             throw Exception::fromMessage('Required must be one of the PARAMETER_* constants.');
         }
+
         $this->required = $required;
     }
 
@@ -56,9 +57,9 @@ class Argument extends Base
     /**
      * Set the order for this argument.
      */
-    public function setOrder($order): void
+    public function setOrder(int $order): void
     {
-        $this->order = (int)$order;
+        $this->order = $order;
     }
 
     /**

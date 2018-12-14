@@ -7,7 +7,7 @@ use Parable\Console\Parameter;
 
 class Option extends Base
 {
-    /** @var int|null */
+    /** @var int */
     protected $valueType;
 
     /** @var bool */
@@ -20,10 +20,10 @@ class Option extends Base
      * @param bool       $flagOption
      */
     public function __construct(
-        $name,
-        $valueType = Parameter::OPTION_VALUE_OPTIONAL,
+        string $name,
+        int $valueType = Parameter::OPTION_VALUE_OPTIONAL,
         $defaultValue = null,
-        $flagOption = false
+        bool $flagOption = false
     ) {
         $this->setName($name);
         $this->setValueType($valueType);

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Parable\Console;
 
@@ -11,7 +11,9 @@ class Output
      */
     protected $environment;
 
-    /** @var array */
+    /**
+     * @var array
+     */
     protected $predefinedTags = [
         'default'          => "\e[0m",
         'black'            => "\e[;30m",
@@ -49,12 +51,18 @@ class Output
         'bg_white'         => "\e[107m",
     ];
 
+    /**
+     * @var string[][]
+     */
     protected $tagSets = [
         'error'   => ['white', 'bg_red'],
         'success' => ['black', 'bg_green'],
         'info'    => ['black', 'bg_yellow'],
     ];
 
+    /**
+     * @var bool
+     */
     protected $clearLineEnabled = false;
 
     public function __construct(

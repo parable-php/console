@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Parable\Console\Parameter;
 
@@ -7,18 +7,16 @@ use Parable\Console\Parameter;
 
 class Option extends Base
 {
-    /** @var int */
+    /**
+     * @var int
+     */
     protected $valueType;
 
-    /** @var bool */
+    /**
+     * @var bool
+     */
     protected $flagOption = false;
 
-    /**
-     * @param string     $name
-     * @param int        $valueType
-     * @param mixed|null $defaultValue
-     * @param bool       $flagOption
-     */
     public function __construct(
         string $name,
         int $valueType = Parameter::OPTION_VALUE_OPTIONAL,
@@ -31,9 +29,6 @@ class Option extends Base
         $this->setFlagOption($flagOption);
     }
 
-    /**
-     * Set whether the option's value is required.
-     */
     public function setValueType(int $valueType): void
     {
         if (!in_array(
@@ -49,9 +44,6 @@ class Option extends Base
         $this->valueType = $valueType;
     }
 
-    /**
-     * Return whether the option's value is required.
-     */
     public function isValueRequired(): bool
     {
         return $this->valueType === Parameter::OPTION_VALUE_REQUIRED;

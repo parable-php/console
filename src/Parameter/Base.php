@@ -1,88 +1,69 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Parable\Console\Parameter;
 
 abstract class Base
 {
-    /** @var string|null */
+    /**
+     * @var string|null
+     */
     protected $name;
 
-    /** @var mixed|null */
+    /**
+     * @var mixed|null
+     */
     protected $defaultValue;
 
-    /** @var bool */
+    /**
+     * @var bool
+     */
     protected $hasBeenProvided = false;
 
-    /** @var string|null */
+    /**
+     * @var string|null
+     */
     protected $providedValue;
 
-    /**
-     * Set the name.
-     */
     public function setName(string $name): void
     {
         $this->name = $name;
     }
 
-    /**
-     * Return the name.
-     */
     public function getName(): ?string
     {
         return $this->name;
     }
 
-    /**
-     * Set the default value.
-     */
     public function setDefaultValue($defaultValue): void
     {
         $this->defaultValue = $defaultValue;
     }
 
-    /**
-     * Return the default value.
-     */
     public function getDefaultValue()
     {
         return $this->defaultValue;
     }
 
-    /**
-     * Set whether the parameter has been provided.
-     */
     public function setHasBeenProvided(bool $hasBeenProvided): void
     {
         $this->hasBeenProvided = $hasBeenProvided;
     }
 
-    /**
-     * Return whether the parameter has been provided.
-     */
     public function hasBeenProvided(): bool
     {
         return $this->hasBeenProvided;
     }
 
-    /**
-     * Set the value that was provided.
-     */
     public function setProvidedValue(?string $providedValue): void
     {
         $this->providedValue = $providedValue;
     }
 
-    /**
-     * Return the provided value.
-     */
     public function getProvidedValue(): ?string
     {
         return $this->providedValue;
     }
 
-    /**
-     * Get the value. The provided value if available, otherwise the default.
-     */
     public function getValue()
     {
         if ($this->getProvidedValue() !== null) {

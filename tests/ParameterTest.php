@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Parable\Console\Tests;
 
@@ -38,13 +38,13 @@ class ParameterTest extends AbstractTestClass
         $this->parameter->checkCommandOptions();
         $this->parameter->checkCommandArguments();
 
-        $this->assertSame('./test.php', $this->parameter->getScriptName());
-        $this->assertSame('command-to-run', $this->parameter->getCommandName());
+        self::assertSame('./test.php', $this->parameter->getScriptName());
+        self::assertSame('command-to-run', $this->parameter->getCommandName());
 
-        $this->assertTrue($this->parameter->getOption('option'));
-        $this->assertSame("value2", $this->parameter->getOption('key'));
+        self::assertTrue($this->parameter->getOption('option'));
+        self::assertSame("value2", $this->parameter->getOption('key'));
 
-        $this->assertSame(
+        self::assertSame(
             [
                 "command-to-run",
                 "--option",
@@ -62,13 +62,13 @@ class ParameterTest extends AbstractTestClass
             'command-to-run',
         ]);
 
-        $this->assertSame('./test.php', $this->parameter->getScriptName());
-        $this->assertSame('command-to-run', $this->parameter->getCommandName());
+        self::assertSame('./test.php', $this->parameter->getScriptName());
+        self::assertSame('command-to-run', $this->parameter->getCommandName());
     }
 
     public function testGetInvalidOptionReturnsNull()
     {
-        $this->assertNull($this->parameter->getOption('la-dee-dah'));
+        self::assertNull($this->parameter->getOption('la-dee-dah'));
     }
 
     public function testCommandNameIsNullIfNotGiven()
@@ -77,8 +77,8 @@ class ParameterTest extends AbstractTestClass
             './test.php',
         ]);
 
-        $this->assertSame('./test.php', $this->parameter->getScriptName());
-        $this->assertNull($this->parameter->getCommandName());
+        self::assertSame('./test.php', $this->parameter->getScriptName());
+        self::assertNull($this->parameter->getCommandName());
     }
 
     public function testCommandNameIsNullIfNotGivenButThereIsAnOptionGiven()
@@ -88,8 +88,8 @@ class ParameterTest extends AbstractTestClass
             '--option',
         ]);
 
-        $this->assertSame('./test.php', $this->parameter->getScriptName());
-        $this->assertNull($this->parameter->getCommandName());
+        self::assertSame('./test.php', $this->parameter->getScriptName());
+        self::assertNull($this->parameter->getCommandName());
     }
 
     public function testThrowsExceptionWhenOptionIsGivenButValueRequiredNotGiven()
@@ -152,7 +152,7 @@ class ParameterTest extends AbstractTestClass
         ]);
         $this->parameter->checkCommandOptions();
 
-        $this->assertSame('option-value', $this->parameter->getOption('option'));
+        self::assertSame('option-value', $this->parameter->getOption('option'));
     }
 
     public function testRequiredArgumentThrowsException()
@@ -189,14 +189,14 @@ class ParameterTest extends AbstractTestClass
 
         $this->parameter->checkCommandArguments();
 
-        $this->assertSame("arg1", $this->parameter->getArgument("numero1"));
-        $this->assertSame("arg2", $this->parameter->getArgument("numero2"));
-        $this->assertSame(24, $this->parameter->getArgument("numero3"));
+        self::assertSame("arg1", $this->parameter->getArgument("numero1"));
+        self::assertSame("arg2", $this->parameter->getArgument("numero2"));
+        self::assertSame(24, $this->parameter->getArgument("numero3"));
     }
 
     public function testInvalidArgumentReturnsNull()
     {
-        $this->assertNull($this->parameter->getArgument("totally not"));
+        self::assertNull($this->parameter->getArgument("totally not"));
     }
 
     public function testMultipleOptionParameters()
@@ -217,7 +217,7 @@ class ParameterTest extends AbstractTestClass
 
         $this->parameter->checkCommandOptions();
 
-        $this->assertSame(
+        self::assertSame(
             [
                 'option1' => 'value1',
                 'option2' => true,
@@ -256,14 +256,14 @@ class ParameterTest extends AbstractTestClass
         $this->parameter->checkCommandOptions();
         $this->parameter->checkCommandArguments();
 
-        $this->assertSame(
+        self::assertSame(
             [
                 'option1' => 'value1',
                 'option2' => 'value2',
             ],
             $this->parameter->getOptions()
         );
-        $this->assertSame(
+        self::assertSame(
             [
                 'brg1' => 'argument1',
                 'arg2' => 'argument2 is a string',
@@ -306,7 +306,7 @@ class ParameterTest extends AbstractTestClass
 
         $this->parameter->checkCommandArguments();
 
-        $this->assertSame(
+        self::assertSame(
             [
                 "arg1" => "argument1",
                 "arg2" => null,
@@ -317,7 +317,7 @@ class ParameterTest extends AbstractTestClass
         $this->parameter->disableCommandName();
         $this->parameter->checkCommandArguments();
 
-        $this->assertSame(
+        self::assertSame(
             [
                 "arg1" => "command-to-run",
                 "arg2" => "argument1",
@@ -328,7 +328,7 @@ class ParameterTest extends AbstractTestClass
         $this->parameter->enableCommandName();
         $this->parameter->checkCommandArguments();
 
-        $this->assertSame(
+        self::assertSame(
             [
                 "arg1" => "argument1",
                 "arg2" => null,
@@ -386,7 +386,7 @@ class ParameterTest extends AbstractTestClass
 
         $this->parameter->checkCommandOptions();
 
-        $this->assertEquals($expected, $this->parameter->getOption('option'));
+        self::assertEquals($expected, $this->parameter->getOption('option'));
     }
 
     /**
@@ -424,7 +424,7 @@ class ParameterTest extends AbstractTestClass
             '-a',
         ]);
         $this->parameter->checkCommandOptions();
-        $this->assertSame(
+        self::assertSame(
             [
                 'a' => true,
                 'b' => null,
@@ -447,7 +447,7 @@ class ParameterTest extends AbstractTestClass
             '-b',
         ]);
         $this->parameter->checkCommandOptions();
-        $this->assertSame(
+        self::assertSame(
             [
                 'a' => true,
                 'b' => true,
@@ -471,7 +471,7 @@ class ParameterTest extends AbstractTestClass
             'argument1',
         ]);
         $this->parameter->checkCommandOptions();
-        $this->assertSame(
+        self::assertSame(
             [
                 'a' => true,
                 'b' => null,
@@ -495,7 +495,7 @@ class ParameterTest extends AbstractTestClass
             '-ab=c',
         ]);
         $this->parameter->checkCommandOptions();
-        $this->assertSame(
+        self::assertSame(
             [
                 'a' => true,
                 'b' => 'c',
@@ -518,7 +518,7 @@ class ParameterTest extends AbstractTestClass
             '--aa=test',
         ]);
         $this->parameter->checkCommandOptions();
-        $this->assertSame(
+        self::assertSame(
             [
                 'aa' => 'test',
                 'bb' => null,
@@ -541,7 +541,7 @@ class ParameterTest extends AbstractTestClass
             'test',
         ]);
         $this->parameter->checkCommandOptions();
-        $this->assertSame(
+        self::assertSame(
             [
                 'a' => true,
                 'c' => true,
@@ -571,7 +571,7 @@ class ParameterTest extends AbstractTestClass
         ]);
 
         $this->parameter->checkCommandOptions();
-        $this->assertSame(
+        self::assertSame(
             [
                 'a' => null,
             ],
@@ -585,7 +585,7 @@ class ParameterTest extends AbstractTestClass
         ]);
 
         $this->parameter->checkCommandOptions();
-        $this->assertSame(
+        self::assertSame(
             [
                 'a' => 'flag',
             ],
@@ -606,7 +606,7 @@ class ParameterTest extends AbstractTestClass
         ]);
 
         $this->parameter->checkCommandOptions();
-        $this->assertSame(
+        self::assertSame(
             [
                 'a' => null,
             ],
@@ -620,7 +620,7 @@ class ParameterTest extends AbstractTestClass
         ]);
 
         $this->parameter->checkCommandOptions();
-        $this->assertSame(
+        self::assertSame(
             [
                 'a' => 'flag',
             ],

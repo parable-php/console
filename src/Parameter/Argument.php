@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Parable\Console\Parameter;
 
@@ -7,17 +7,16 @@ use Parable\Console\Parameter;
 
 class Argument extends Base
 {
-    /** @var int|null */
+    /**
+     * @var int
+     */
     protected $required;
 
-    /** @var int|null */
+    /**
+     * @var int|null
+     */
     protected $order;
 
-    /**
-     * @param string     $name
-     * @param int        $required
-     * @param mixed|null $defaultValue
-     */
     public function __construct(
         string $name,
         int $required = Parameter::PARAMETER_OPTIONAL,
@@ -28,9 +27,6 @@ class Argument extends Base
         $this->setDefaultValue($defaultValue);
     }
 
-    /**
-     * Set whether this argument is required.
-     */
     public function setRequired(int $required): void
     {
         if (!in_array(
@@ -46,25 +42,16 @@ class Argument extends Base
         $this->required = $required;
     }
 
-    /**
-     * Return whether the parameter is required.
-     */
     public function isRequired(): bool
     {
         return $this->required === Parameter::PARAMETER_REQUIRED;
     }
 
-    /**
-     * Set the order for this argument.
-     */
     public function setOrder(int $order): void
     {
         $this->order = $order;
     }
 
-    /**
-     * Return the order for this argument.
-     */
     public function getOrder(): ?int
     {
         return $this->order;

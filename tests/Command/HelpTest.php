@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Parable\Console\Tests\Command;
 
@@ -41,10 +41,10 @@ class HelpTest extends AbstractTestClass
 
         $content = $this->getActualOutputAndClean();
 
-        $this->assertContains("Help Test App", $content);
-        $this->assertContains("Available commands:", $content);
-        $this->assertContains("help", $content);
-        $this->assertContains("Shows all commands available.", $content);
+        self::assertContains("Help Test App", $content);
+        self::assertContains("Available commands:", $content);
+        self::assertContains("help", $content);
+        self::assertContains("Shows all commands available.", $content);
     }
 
     public function testHelpOnSpecificCommandReturnsDescriptionAndUsage()
@@ -61,9 +61,9 @@ class HelpTest extends AbstractTestClass
 
         $content = $this->getActualOutputAndClean();
 
-        $this->assertContains("Help Test App", $content);
-        $this->assertContains("Description:", $content);
-        $this->assertContains("Usage:", $content);
+        self::assertContains("Help Test App", $content);
+        self::assertContains("Description:", $content);
+        self::assertContains("Usage:", $content);
     }
 
     public function testHelpOnUnknownCommandReturnsError()
@@ -80,7 +80,7 @@ class HelpTest extends AbstractTestClass
 
         $content = $this->getActualOutputAndClean();
 
-        $this->assertContains("Unknown command:", $content);
-        $this->assertContains("what-is-this-i-cant-even", $content);
+        self::assertContains("Unknown command:", $content);
+        self::assertContains("what-is-this-i-cant-even", $content);
     }
 }

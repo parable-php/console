@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Parable\Console;
 
@@ -7,36 +7,51 @@ use Parable\Console\Parameter\Option;
 
 class Command
 {
-    /** @var App */
+    /**
+     * @var App
+     */
     protected $app;
 
-    /** @var Output */
+    /**
+     * @var Output
+     */
     protected $output;
 
-    /** @var Input */
+    /**
+     * @var Input
+     */
     protected $input;
 
-    /** @var Parameter */
+    /**
+     * @var Parameter
+     */
     protected $parameter;
 
-    /** @var string|null */
+    /**
+     * @var string|null
+     */
     protected $name;
 
-    /** @var string|null */
+    /**
+     * @var string|null
+     */
     protected $description;
 
-    /** @var callable|null */
+    /**
+     * @var callable|null
+     */
     protected $callable;
 
-    /** @var Option[] */
+    /**
+     * @var Option[]
+     */
     protected $options = [];
 
-    /** @var Argument[] */
+    /**
+     * @var Argument[]
+     */
     protected $arguments = [];
 
-    /**
-     * Prepare the command, setting all classes the command is dependant on.
-     */
     public function prepare(
         App $app,
         Output $output,
@@ -49,57 +64,36 @@ class Command
         $this->parameter = $parameter;
     }
 
-    /**
-     * Set the command name.
-     */
     public function setName(string $name): void
     {
         $this->name = $name;
     }
 
-    /**
-     * Return the command name.
-     */
     public function getName(): ?string
     {
         return $this->name;
     }
 
-    /**
-     * Set the command description.
-     */
     public function setDescription(string $description): void
     {
         $this->description = $description;
     }
 
-    /**
-     * Return the command description.
-     */
     public function getDescription(): ?string
     {
         return $this->description;
     }
 
-    /**
-     * Set the callable to be run when the command is run.
-     */
     public function setCallable(callable $callable): void
     {
         $this->callable = $callable;
     }
 
-    /**
-     * Return the callable.
-     */
     public function getCallable(): ?callable
     {
         return $this->callable;
     }
 
-    /**
-     * Add an option for this command.
-     */
     public function addOption(
         string $name,
         int $valueRequired = Parameter::OPTION_VALUE_OPTIONAL,
@@ -115,8 +109,6 @@ class Command
     }
 
     /**
-     * Return all options for this command.
-     *
      * @return Option[]
      */
     public function getOptions(): array
@@ -124,9 +116,6 @@ class Command
         return $this->options;
     }
 
-    /**
-     * Add an argument for this command.
-     */
     public function addArgument(
         string $name,
         int $required = Parameter::PARAMETER_OPTIONAL,
@@ -136,8 +125,6 @@ class Command
     }
 
     /**
-     * Return all arguments for this command.
-     *
      * @return Argument[]
      */
     public function getArguments(): array
@@ -145,10 +132,6 @@ class Command
         return $this->arguments;
     }
 
-    /**
-     * Build a usage string out of the arguments and options set on the command.
-     * Is automatically called when an exception is caught by App.
-     */
     public function getUsage(): string
     {
         $string = [];
@@ -179,10 +162,6 @@ class Command
         return implode(' ', $string);
     }
 
-    /**
-     * Run the callable if it's set. This can be overridden by
-     * implementing the run method on a Command class.
-     */
     public function run()
     {
         $callable = $this->getCallable();
@@ -194,8 +173,6 @@ class Command
     }
 
     /**
-     * Run another command from the current command, passing parameters as an array.
-     *
      * @param string[] $parameters
      */
     protected function runCommand(Command $command, array $parameters = [])

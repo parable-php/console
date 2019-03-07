@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Parable\Console;
 
@@ -9,7 +9,9 @@ class Input
      */
     protected $environment;
 
-    /** @var string[] */
+    /**
+     * @var string[]
+     */
     protected $specialKeys = [
         "esc"         => "%1B",
         "enter"       => "%0A",
@@ -38,9 +40,6 @@ class Input
         $this->environment = $environment;
     }
 
-    /**
-     * Request input from the user and require a return at the end.
-     */
     public function get(): string
     {
         return trim($this->getRaw());
@@ -51,10 +50,6 @@ class Input
         return fread(STDIN, 10000);
     }
 
-    /**
-     * Return a single key press without waiting for a return. Hide provided input.
-     * Will return string values defined in $specialKeys for key presses defined in that array.
-     */
     public function getKeyPress(): string
     {
         $this->disableShowInput();
@@ -74,9 +69,6 @@ class Input
         return $specialKey ? $specialKey : (string)$input;
     }
 
-    /**
-     * Detect whether the key defined in $input is considered a special key.
-     */
     protected function detectSpecialKey(string $input): ?string
     {
         $specialKey = false;
@@ -87,9 +79,6 @@ class Input
         return $specialKey ? $specialKey : null;
     }
 
-    /**
-     * Set that we will wait for a user-provided return before returning the input.
-     */
     public function enableRequireReturn(): void
     {
         if ($this->environment->isInteractiveShell()) {
@@ -97,9 +86,6 @@ class Input
         }
     }
 
-    /**
-     * Set that we will NOT wait for a user-provided return before returning the input.
-     */
     public function disableRequireReturn(): void
     {
         if ($this->environment->isInteractiveShell()) {
@@ -107,9 +93,6 @@ class Input
         }
     }
 
-    /**
-     * Show the input entered by the user to the user.
-     */
     public function enableShowInput(): void
     {
         if ($this->environment->isInteractiveShell()) {
@@ -117,9 +100,6 @@ class Input
         }
     }
 
-    /**
-     * Do not show the input entered by the user to the user.
-     */
     public function disableShowInput(): void
     {
         if ($this->environment->isInteractiveShell()) {
@@ -127,9 +107,6 @@ class Input
         }
     }
 
-    /**
-     * Request input from the user, while hiding the actual input. Use this to request passwords, for example.
-     */
     public function getHidden(): string
     {
         if ($this->environment->isWindows()) {
@@ -143,10 +120,6 @@ class Input
         return $input;
     }
 
-    /**
-     * Request a y/n input from the user, with a default value
-     * highlighted as uppercase ([Y/n], for example).
-     */
     public function getYesNo(bool $default = true): bool
     {
         $value = strtolower($this->get());
@@ -167,9 +140,6 @@ class Input
         return false;
     }
 
-    /**
-     * Make sure we reset showing input, as it will linger after the script ending if not reset.
-     */
     public function __destruct()
     {
         $this->enableShowInput();

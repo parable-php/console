@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Parable\Console;
 
@@ -13,31 +13,49 @@ class Parameter
     const OPTION_VALUE_REQUIRED = 11;
     const OPTION_VALUE_OPTIONAL = 12;
 
-    /** @var string[] */
+    /**
+     * @var string[]
+     */
     protected $parameters = [];
 
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $scriptName;
 
-    /** @var string|null */
+    /**
+     * @var string|null
+     */
     protected $commandName;
 
-    /** @var array */
+    /**
+     * @var array
+     */
     protected $options = [];
 
-    /** @var array */
+    /**
+     * @var array
+     */
     protected $flagOptions = [];
 
-    /** @var array */
+    /**
+     * @var array
+     */
     protected $arguments = [];
 
-    /** @var Option[] */
+    /**
+     * @var Option[]
+     */
     protected $commandOptions = [];
 
-    /** @var Argument[] */
+    /**
+     * @var Argument[]
+     */
     protected $commandArguments = [];
 
-    /** @var bool */
+    /**
+     * @var bool
+     */
     protected $commandNameEnabled = true;
 
     public function __construct()
@@ -95,9 +113,6 @@ class Parameter
         }
     }
 
-    /**
-     * @param string $optionString
-     */
     protected function parseOption(string $optionString): void
     {
         $optionParts = explode('=', $optionString);
@@ -147,17 +162,11 @@ class Parameter
         }
     }
 
-    /**
-     * Return the script name.
-     */
     public function getScriptName(): string
     {
         return $this->scriptName;
     }
 
-    /**
-     * Return the command name.
-     */
     public function getCommandName(): ?string
     {
         return $this->commandName;
@@ -224,9 +233,6 @@ class Parameter
         return $option->getValue();
     }
 
-    /**
-     * Return all option values.
-     */
     public function getOptions(): array
     {
         $returnArray = [];

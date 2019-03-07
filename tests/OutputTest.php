@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Parable\Console\Tests;
 
@@ -45,7 +45,7 @@ class OutputTest extends AbstractTestClass
         $this->output->write('OK');
         $content = $this->getActualOutputAndClean();
 
-        $this->assertSameWithTag("OK", $content);
+        self::assertSameWithTag("OK", $content);
     }
 
     public function testWriteln()
@@ -53,7 +53,7 @@ class OutputTest extends AbstractTestClass
         $this->output->writeln('OK');
         $content = $this->getActualOutputAndClean();
 
-        $this->assertSameWithTag("OK\n", $content);
+        self::assertSameWithTag("OK\n", $content);
     }
 
     public function testWritelnWithArray()
@@ -64,69 +64,69 @@ class OutputTest extends AbstractTestClass
         ]);
         $content = $this->getActualOutputAndClean();
 
-        $this->assertSameWithTag("line1\nline2\n", $content);
+        self::assertSameWithTag("line1\nline2\n", $content);
     }
 
     public function testNewline()
     {
         // Just one.
         $this->output->newline();
-        $this->assertSame("\n", $this->getActualOutputAndClean());
+        self::assertSame("\n", $this->getActualOutputAndClean());
 
         // Now multiple
         $this->output->newline(3);
-        $this->assertSame("\n\n\n", $this->getActualOutputAndClean());
+        self::assertSame("\n\n\n", $this->getActualOutputAndClean());
     }
 
     public function testCursorForward()
     {
         $this->output->cursorForward(1);
-        $this->assertSameWithTag("\e[1C", $this->getActualOutputAndClean());
+        self::assertSameWithTag("\e[1C", $this->getActualOutputAndClean());
     }
 
     public function testCursorBackward()
     {
         $this->output->cursorBackward(1);
-        $this->assertSameWithTag("\e[1D", $this->getActualOutputAndClean());
+        self::assertSameWithTag("\e[1D", $this->getActualOutputAndClean());
     }
 
     public function testCursorUp()
     {
         $this->output->cursorUp(1);
-        $this->assertSameWithTag("\e[1A", $this->getActualOutputAndClean());
+        self::assertSameWithTag("\e[1A", $this->getActualOutputAndClean());
     }
 
     public function testCursorDown()
     {
         $this->output->cursorDown(1);
-        $this->assertSameWithTag("\e[1B", $this->getActualOutputAndClean());
+        self::assertSameWithTag("\e[1B", $this->getActualOutputAndClean());
     }
 
     public function testCursorPlace()
     {
         $this->output->cursorPlace(4, 8);
-        $this->assertSameWithTag("\e[4;8H", $this->getActualOutputAndClean());
+        self::assertSameWithTag("\e[4;8H", $this->getActualOutputAndClean());
     }
 
     public function testCursorPlaceDisablesClearLine()
     {
         $this->output->write("stuff!");
-        $this->assertTrue($this->output->isClearLineEnabled());
+        self::assertTrue($this->output->isClearLineEnabled());
 
         $this->output->cursorPlace(1, 1);
-        $this->assertFalse($this->output->isClearLineEnabled());
+        self::assertFalse($this->output->isClearLineEnabled());
 
         // This should do nothing
         $this->output->clearLine();
 
         // If clear line had worked, there would be many spaces. The string we're expecting does not.
-        $this->assertSame("stuff!\e[0m\e[1;1H\e[0m", $this->getActualOutputAndClean());
+        self::assertSame("stuff!\e[0m\e[1;1H\e[0m", $this->getActualOutputAndClean());
     }
 
     public function testCls()
     {
         $this->output->cls();
-        $this->assertSameWithTag("\ec", $this->getActualOutputAndClean());
+        self::assertSameWithTag("\ec", $this->getActualOutputAndClean());
     }
 
     public function testClearLine()
@@ -139,7 +139,7 @@ class OutputTest extends AbstractTestClass
         $output = urlencode($this->getActualOutputAndClean());
 
         // Check that we've got 2 carriage returns and then remove %0D (carriage return)
-        $this->assertSame(2, substr_count($output, "%0D"));
+        self::assertSame(2, substr_count($output, "%0D"));
         $output = str_replace("%0D", "", $output);
 
         // Straight up remove %1B (backslash) and %5B (square bracket) combinations (the reset style \[0m)
@@ -148,7 +148,7 @@ class OutputTest extends AbstractTestClass
         // Check that we've got the correct amount of spaces (+)
         $spaces = str_repeat("+", $this->environment->getTerminalWidth());
 
-        $this->assertSame(
+        self::assertSame(
             $output,
             "12345{$spaces}no"
         );
@@ -167,7 +167,7 @@ class OutputTest extends AbstractTestClass
             "",
         ];
 
-        $this->assertSame(
+        self::assertSame(
             implode("\n", $output),
             $this->getActualOutputAndClean()
         );
@@ -186,7 +186,7 @@ class OutputTest extends AbstractTestClass
             "",
         ];
 
-        $this->assertSame(
+        self::assertSame(
             implode("\n", $output),
             $this->getActualOutputAndClean()
         );
@@ -205,7 +205,7 @@ class OutputTest extends AbstractTestClass
             "",
         ];
 
-        $this->assertSame(
+        self::assertSame(
             implode("\n", $output),
             $this->getActualOutputAndClean()
         );
@@ -224,7 +224,7 @@ class OutputTest extends AbstractTestClass
             "",
         ];
 
-        $this->assertSame(
+        self::assertSame(
             implode("\n", $output),
             $this->getActualOutputAndClean()
         );
@@ -243,7 +243,7 @@ class OutputTest extends AbstractTestClass
             "",
         ];
 
-        $this->assertSame(
+        self::assertSame(
             implode("\n", $output),
             $this->getActualOutputAndClean()
         );
@@ -262,7 +262,7 @@ class OutputTest extends AbstractTestClass
             "",
         ];
 
-        $this->assertSame(
+        self::assertSame(
             implode("\n", $output),
             $this->getActualOutputAndClean()
         );
@@ -286,7 +286,7 @@ class OutputTest extends AbstractTestClass
             "",
         ];
 
-        $this->assertSame(
+        self::assertSame(
             implode("\n", $output),
             $this->getActualOutputAndClean()
         );
@@ -297,12 +297,12 @@ class OutputTest extends AbstractTestClass
         $output = $this->container->build(Output::class);
 
         // Since tags are escaped with the defaultTag at the end, we'll need 2
-        $this->assertSame($this->addTag("\e[;32mgreen", 2), $output->parseTags('<green>green</green>'));
-        $this->assertSame($this->addTag("\e[;31mred", 2), $output->parseTags('<red>red</red>'));
+        self::assertSame($this->addTag("\e[;32mgreen", 2), $output->parseTags('<green>green</green>'));
+        self::assertSame($this->addTag("\e[;31mred", 2), $output->parseTags('<red>red</red>'));
 
         // And a more complex one, with both a fore- and a background color
         // Since tags are escaped with the defaultTag at the end and there's two tags, we'll need 3
-        $this->assertSame(
+        self::assertSame(
             $this->addTag("\e[;31m\e[47mred on lightgray", 3),
             $output->parseTags('<red><bg_light_gray>red on lightgray</bg_light_gray></red>')
         );
@@ -312,7 +312,7 @@ class OutputTest extends AbstractTestClass
     {
         $output = $this->container->build(Output::class);
 
-        $this->assertSame(
+        self::assertSame(
             $this->addTag("\e[;97m\e[41mthis is an error tag set", 2),
             $output->parseTags('<error>this is an error tag set</error>')
         );
@@ -321,7 +321,7 @@ class OutputTest extends AbstractTestClass
     public function testUnknownTags()
     {
         $output = $this->container->build(Output::class);
-        $this->assertSame($this->addTag('<tag>unknown</tag>'), $output->parseTags('<tag>unknown</tag>'));
+        self::assertSame($this->addTag('<tag>unknown</tag>'), $output->parseTags('<tag>unknown</tag>'));
     }
 
     /**
@@ -335,7 +335,7 @@ class OutputTest extends AbstractTestClass
     protected function assertSameWithTag($expected, $actual)
     {
         $expected = $this->addTag($expected);
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**

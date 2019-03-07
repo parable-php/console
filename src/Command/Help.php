@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Parable\Console\Command;
 
@@ -6,10 +6,14 @@ use Parable\Console\Command;
 
 class Help extends Command
 {
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $name = 'help';
 
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $description = 'Shows all commands available.';
 
     public function __construct()
@@ -17,9 +21,6 @@ class Help extends Command
         $this->addArgument('command_name');
     }
 
-    /**
-     * Show the names and descriptions of all commands set on the application at this moment.
-     */
     public function run(): void
     {
         if ($this->app->getName()) {
@@ -36,9 +37,6 @@ class Help extends Command
         }
     }
 
-    /**
-     * Show information about all commands.
-     */
     protected function showGeneralHelp()
     {
         $this->output->writeln("<yellow>Available commands:</yellow>");

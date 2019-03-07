@@ -1,31 +1,47 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Parable\Console;
 
 class App
 {
-    /** @var Output */
+    /**
+     * @var Output
+     */
     protected $output;
 
-    /** @var Input */
+    /**
+     * @var Input
+     */
     protected $input;
 
-    /** @var Parameter */
+    /**
+     * @var Parameter
+     */
     protected $parameter;
 
-    /** @var string|null */
+    /**
+     * @var string|null
+     */
     protected $name;
 
-    /** @var Command[] */
+    /**
+     * @var Command[]
+     */
     protected $commands = [];
 
-    /** @var Command|null */
+    /**
+     * @var Command|null
+     */
     protected $activeCommand;
 
-    /** @var string|null */
+    /**
+     * @var string|null
+     */
     protected $defaultCommand;
 
-    /** @var bool */
+    /**
+     * @var bool
+     */
     protected $onlyUseDefaultCommand = false;
 
     public function __construct(
@@ -37,10 +53,8 @@ class App
         $this->input     = $input;
         $this->parameter = $parameter;
 
-        set_exception_handler(function ($e) {
+        set_exception_handler(function (Exception $e) {
             // @codeCoverageIgnoreStart
-
-            /** @var \Exception $e */
             $this->output->writeErrorBlock([$e->getMessage()]);
 
             if ($this->activeCommand) {
@@ -50,25 +64,16 @@ class App
         });
     }
 
-    /**
-     * Set the application name.
-     */
     public function setName(string $name): void
     {
         $this->name = $name;
     }
 
-    /**
-     * Return the application name.
-     */
     public function getName(): ?string
     {
         return $this->name;
     }
 
-    /**
-     * Add a command to the application.
-     */
     public function addCommand(Command $command): void
     {
         $command->prepare($this, $this->output, $this->input, $this->parameter);
@@ -76,8 +81,6 @@ class App
     }
 
     /**
-     * Add an array of commands to the application.
-     *
      * @param Command[] $commands
      */
     public function addCommands(array $commands): void
@@ -87,51 +90,32 @@ class App
         }
     }
 
-    /**
-     * Set the default command to use if no command is given (by name).
-     */
     public function setDefaultCommandByName(string $commandName): void
     {
         $this->defaultCommand = $commandName;
     }
 
-    /**
-     * Set the default command to use if no command is given. Also
-     * adds the command.
-     */
     public function setDefaultCommand(Command $command): void
     {
         $this->addCommand($command);
         $this->setDefaultCommandByName($command->getName());
     }
 
-    /**
-     * Set whether, if a default command is set up, we should consider it the only command.
-     */
     public function setOnlyUseDefaultCommand(bool $onlyUseDefaultCommand): void
     {
         $this->onlyUseDefaultCommand = $onlyUseDefaultCommand;
     }
 
-    /**
-     * Return whether, if a default command is set up, we should consider it the only command.
-     */
     public function shouldOnlyUseDefaultCommand(): bool
     {
         return $this->onlyUseDefaultCommand;
     }
 
-    /**
-     * Returns whether the $commandName is registered.
-     */
     public function hasCommand(string $commandName): bool
     {
         return isset($this->commands[$commandName]);
     }
 
-    /**
-     * Return the command by name if it's set on the application.
-     */
     public function getCommand(string $commandName): ?Command
     {
         if ($this->hasCommand($commandName)) {
@@ -142,8 +126,6 @@ class App
     }
 
     /**
-     * Return all commands set on the application.
-     *
      * @return Command[]
      */
     public function getCommands(): array
@@ -151,9 +133,6 @@ class App
         return $this->commands;
     }
 
-    /**
-     * Remove a command by name.
-     */
     public function removeCommandByName(string $commandName): void
     {
         if ($this->hasCommand($commandName)) {
@@ -161,9 +140,6 @@ class App
         }
     }
 
-    /**
-     * Run the application.
-     */
     public function run()
     {
         $defaultCommand = null;

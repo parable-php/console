@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Parable\Console;
 
@@ -9,20 +9,20 @@ class Environment
 
     public function getTerminalWidth(): int
     {
-        if ($this->isShellAvailable()) {
-            return (int)shell_exec('tput cols');
+        if (!$this->isShellAvailable()) {
+            return self::TERMINAL_DEFAULT_WIDTH;
         }
 
-        return self::TERMINAL_DEFAULT_WIDTH;
+        return (int)shell_exec('tput cols');
     }
 
     public function getTerminalHeight(): int
     {
-        if ($this->isShellAvailable()) {
-            return (int)shell_exec('tput lines');
+        if (!$this->isShellAvailable()) {
+            return self::TERMINAL_DEFAULT_HEIGHT;
         }
 
-        return self::TERMINAL_DEFAULT_HEIGHT;
+        return (int)shell_exec('tput lines');
     }
 
     public function isShellAvailable(): bool

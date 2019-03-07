@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Parable\Console\Tests;
 
@@ -67,74 +67,74 @@ class AppTest extends AbstractTestClass
     public function testAddCommands()
     {
         $app = $this->container->buildAll(\Parable\Console\App::class);
-        $this->assertCount(0, $app->getCommands());
+        self::assertCount(0, $app->getCommands());
 
         $app->addCommands([
             $this->command1,
             $this->command2,
         ]);
 
-        $this->assertCount(2, $app->getCommands());
+        self::assertCount(2, $app->getCommands());
     }
 
     public function testAppSetGetName()
     {
         $this->app->setName('Super-application');
-        $this->assertSame('Super-application', $this->app->getName());
+        self::assertSame('Super-application', $this->app->getName());
     }
 
     public function testAppAddGetCommand()
     {
         $commandGot = $this->app->getCommand('test1');
 
-        $this->assertSame('test1', $commandGot->getName());
-        $this->assertSame('OK1', $commandGot->run());
+        self::assertSame('test1', $commandGot->getName());
+        self::assertSame('OK1', $commandGot->run());
 
         $commandGot = $this->app->getCommand('test2');
 
-        $this->assertSame('test2', $commandGot->getName());
-        $this->assertSame('OK2', $commandGot->run());
+        self::assertSame('test2', $commandGot->getName());
+        self::assertSame('OK2', $commandGot->run());
     }
 
     public function testHasCommand()
     {
-        $this->assertTrue($this->app->hasCommand('test1'));
-        $this->assertFalse($this->app->hasCommand('nope not this one'));
+        self::assertTrue($this->app->hasCommand('test1'));
+        self::assertFalse($this->app->hasCommand('nope not this one'));
     }
 
     public function testAppGetCommandsReturnsAll()
     {
         $commands = $this->app->getCommands();
 
-        $this->assertSame('test1', $commands['test1']->getName());
-        $this->assertSame('OK1', $commands['test1']->run());
+        self::assertSame('test1', $commands['test1']->getName());
+        self::assertSame('OK1', $commands['test1']->run());
 
-        $this->assertSame('test2', $commands['test2']->getName());
-        $this->assertSame('OK2', $commands['test2']->run());
+        self::assertSame('test2', $commands['test2']->getName());
+        self::assertSame('OK2', $commands['test2']->run());
     }
 
     public function testAppGetCommandsWithoutCommandsReturnsEmptyArray()
     {
         $app = $this->container->build(\Parable\Console\App::class);
-        $this->assertSame([], $app->getCommands());
+        self::assertSame([], $app->getCommands());
     }
 
     public function testAppGetNonExistingCommandReturnsNull()
     {
         $app = $this->container->build(\Parable\Console\App::class);
-        $this->assertNull($app->getCommand('nope'));
+        self::assertNull($app->getCommand('nope'));
     }
 
     public function testSetDefaultCommandRunsDefaultCommand()
     {
         $this->app->setDefaultCommand($this->command1);
-        $this->assertSame('OK1', $this->app->run());
+        self::assertSame('OK1', $this->app->run());
     }
 
     public function testSetDefaultCommandByNameRunsDefaultCommand()
     {
         $this->app->setDefaultCommandByName("test1");
-        $this->assertSame('OK1', $this->app->run());
+        self::assertSame('OK1', $this->app->run());
     }
 
     public function testPassCommandOnCommandLineRunsAppropriateCommand()
@@ -151,12 +151,12 @@ class AppTest extends AbstractTestClass
         // Same as calling 'php test.php test2'
         $this->parameter->setParameters(['./test.php', 'test2']);
 
-        $this->assertSame("OK2", $app->run());
+        self::assertSame("OK2", $app->run());
 
         // Same as calling 'php test.php test2'
         $this->parameter->setParameters(['./test.php', 'test1']);
 
-        $this->assertSame("OK1", $app->run());
+        self::assertSame("OK1", $app->run());
     }
 
     public function testRemoveCommandbyName()
@@ -170,13 +170,13 @@ class AppTest extends AbstractTestClass
         $app->addCommand($this->command1);
         $app->addCommand($this->command2);
 
-        $this->assertCount(2, $app->getCommands());
+        self::assertCount(2, $app->getCommands());
 
         $app->removeCommandByName($this->command1->getName());
 
-        $this->assertCount(1, $app->getCommands());
+        self::assertCount(1, $app->getCommands());
 
-        $this->assertSame($this->command2, $app->getCommand($this->command2->getName()));
+        self::assertSame($this->command2, $app->getCommand($this->command2->getName()));
     }
 
     /**
@@ -197,14 +197,14 @@ class AppTest extends AbstractTestClass
         $app->setDefaultCommand($this->command1);
 
         // If defaultCommandOnly, OK1/test1 should run, otherwise OK2/test2
-        $this->assertSame($defaultCommandOnly ? 'OK1' : 'OK2', $app->run());
+        self::assertSame($defaultCommandOnly ? 'OK1' : 'OK2', $app->run());
 
         // If default command only, the "command name" should be shifted to the arguments list instead
         $arguments = $this->command1->getArguments();
         if ($defaultCommandOnly) {
-            $this->assertSame("test2", $arguments[0]->getValue());
+            self::assertSame("test2", $arguments[0]->getValue());
         } else {
-            $this->assertNull($arguments[0]->getValue());
+            self::assertNull($arguments[0]->getValue());
         }
     }
 
@@ -218,7 +218,7 @@ class AppTest extends AbstractTestClass
             'option',
             \Parable\Console\Parameter::OPTION_VALUE_REQUIRED
         );
-        $this->assertSame('OK1', $this->app->run());
+        self::assertSame('OK1', $this->app->run());
 
         // And now build a new app with the option passed without a value
         $_SERVER["argv"] = ['./test.php', '--option'];
@@ -243,7 +243,7 @@ class AppTest extends AbstractTestClass
 
         $app->setDefaultCommand($this->commandReturnOptionValue);
 
-        $this->assertSame('passed value here!', $app->run());
+        self::assertSame('passed value here!', $app->run());
     }
 
     public function testOptionWithDefaultValueWorksProperly()
@@ -259,7 +259,7 @@ class AppTest extends AbstractTestClass
 
         $app->setDefaultCommand($this->commandReturnOptionValue);
 
-        $this->assertSame('default value is here!', $app->run());
+        self::assertSame('default value is here!', $app->run());
     }
 
     public function testThrowsExceptionWhenRanWithoutCommand()

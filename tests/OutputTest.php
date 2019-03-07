@@ -320,9 +320,6 @@ class OutputTest extends AbstractTestClass
 
     public function testUnknownTags()
     {
-        self::expectException(\Parable\Console\Exception::class);
-        self::expectExceptionMessage('No predefined or tag set found for <tag>.');
-
         $output = $this->container->build(Output::class);
         $this->assertSame($this->addTag('<tag>unknown</tag>'), $output->parseTags('<tag>unknown</tag>'));
     }

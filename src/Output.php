@@ -231,7 +231,11 @@ class Output
         $tags = $this->getTagsFromString($line);
 
         foreach ($tags as $tag) {
-            $code = $this->getCodeFor($tag);
+            try {
+                $code = $this->getCodeFor($tag);
+            } catch (Throwable $throwable) {
+                continue;
+            }
 
             $line = str_replace("<{$tag}>", $code, $line);
             $line = str_replace("</{$tag}>", $this->predefinedTags['default'], $line);
@@ -248,7 +252,8 @@ class Output
         foreach ($matches[0] as $tag) {
             $tags[] = trim($tag, '<>');
         }
-        return $tags;
+
+        return array_unique($tags);
     }
 
     protected function getCodeFor(string $tag): string

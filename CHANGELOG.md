@@ -1,5 +1,11 @@
 # Parable Console
 
+## 0.1.3
+
+_Changes_
+
+- Upgrade `parable-php/di` to `0.2.3`.
+
 ## 0.1.2
 
 _Changes_

@@ -2,19 +2,21 @@
 
 namespace Parable\Console\Tests;
 
-use \Parable\Console\Parameter\Option;
-use \Parable\Console\Parameter\Argument;
+use Parable\Console\Exception;
+use Parable\Console\Parameter;
+use Parable\Console\Parameter\Argument;
+use Parable\Console\Parameter\Option;
 
 class ParameterTest extends AbstractTestClass
 {
-    /** @var \Parable\Console\Parameter */
+    /** @var Parameter */
     protected $parameter;
 
     protected function setUp()
     {
         parent::setUp();
 
-        $this->parameter = new \Parable\Console\Parameter();
+        $this->parameter = new Parameter();
     }
 
     public function testParseParametersWorkedCorrectly()
@@ -94,7 +96,7 @@ class ParameterTest extends AbstractTestClass
 
     public function testThrowsExceptionWhenOptionIsGivenButValueRequiredNotGiven()
     {
-        $this->expectException(\Parable\Console\Exception::class);
+        $this->expectException(Exception::class);
         $this->expectExceptionMessage("Option '--option' requires a value, which is not provided.");
 
         $this->parameter->setParameters([
@@ -106,7 +108,7 @@ class ParameterTest extends AbstractTestClass
         $this->parameter->setCommandOptions([
             "option" => new Option(
                 "option",
-                \Parable\Console\Parameter::OPTION_VALUE_REQUIRED
+                Parameter::OPTION_VALUE_REQUIRED
             ),
         ]);
 
@@ -115,7 +117,7 @@ class ParameterTest extends AbstractTestClass
 
     public function testThrowsExceptionWhenFlagOptionIsGivenButValueRequiredNotGiven()
     {
-        $this->expectException(\Parable\Console\Exception::class);
+        $this->expectException(Exception::class);
         $this->expectExceptionMessage("Option '-a' requires a value, which is not provided.");
 
         $this->parameter->setParameters([
@@ -127,7 +129,7 @@ class ParameterTest extends AbstractTestClass
         $this->parameter->setCommandOptions([
             "option" => new Option(
                 "a",
-                \Parable\Console\Parameter::OPTION_VALUE_REQUIRED,
+                Parameter::OPTION_VALUE_REQUIRED,
                 null,
                 true
             ),
@@ -147,7 +149,7 @@ class ParameterTest extends AbstractTestClass
         $this->parameter->setCommandOptions([
             "option" => new Option(
                 "option",
-                \Parable\Console\Parameter::OPTION_VALUE_REQUIRED
+                Parameter::OPTION_VALUE_REQUIRED
             ),
         ]);
         $this->parameter->checkCommandOptions();
@@ -157,7 +159,7 @@ class ParameterTest extends AbstractTestClass
 
     public function testRequiredArgumentThrowsException()
     {
-        $this->expectException(\Parable\Console\Exception::class);
+        $this->expectException(Exception::class);
         $this->expectExceptionMessage("Required argument with index #1 'numero2' not provided.");
 
         $this->parameter->setParameters([
@@ -166,8 +168,8 @@ class ParameterTest extends AbstractTestClass
             'arg1',
         ]);
         $this->parameter->setCommandArguments([
-            new Argument("numero1", \Parable\Console\Parameter::PARAMETER_REQUIRED),
-            new Argument("numero2", \Parable\Console\Parameter::PARAMETER_REQUIRED),
+            new Argument("numero1", Parameter::PARAMETER_REQUIRED),
+            new Argument("numero2", Parameter::PARAMETER_REQUIRED),
         ]);
         $this->parameter->checkCommandArguments();
     }
@@ -182,9 +184,9 @@ class ParameterTest extends AbstractTestClass
         ]);
 
         $this->parameter->setCommandArguments([
-            new Argument("numero1", \Parable\Console\Parameter::PARAMETER_REQUIRED),
-            new Argument("numero2", \Parable\Console\Parameter::PARAMETER_REQUIRED, 12),
-            new Argument("numero3", \Parable\Console\Parameter::PARAMETER_OPTIONAL, 24),
+            new Argument("numero1", Parameter::PARAMETER_REQUIRED),
+            new Argument("numero2", Parameter::PARAMETER_REQUIRED, 12),
+            new Argument("numero3", Parameter::PARAMETER_OPTIONAL, 24),
         ]);
 
         $this->parameter->checkCommandArguments();
@@ -210,9 +212,9 @@ class ParameterTest extends AbstractTestClass
         ]);
 
         $this->parameter->setCommandOptions([
-            new Option("option1", \Parable\Console\Parameter::OPTION_VALUE_REQUIRED),
+            new Option("option1", Parameter::OPTION_VALUE_REQUIRED),
             new Option("option2"),
-            new Option("option3", \Parable\Console\Parameter::OPTION_VALUE_REQUIRED),
+            new Option("option3", Parameter::OPTION_VALUE_REQUIRED),
         ]);
 
         $this->parameter->checkCommandOptions();
@@ -246,11 +248,11 @@ class ParameterTest extends AbstractTestClass
             new Option("option2"),
         ]);
         $this->parameter->setCommandArguments([
-            new Argument("brg1", \Parable\Console\Parameter::PARAMETER_REQUIRED),
-            new Argument("arg2", \Parable\Console\Parameter::PARAMETER_OPTIONAL),
-            new Argument("arg3", \Parable\Console\Parameter::PARAMETER_OPTIONAL),
-            new Argument("arg4", \Parable\Console\Parameter::PARAMETER_OPTIONAL),
-            new Argument("arg5", \Parable\Console\Parameter::PARAMETER_OPTIONAL),
+            new Argument("brg1", Parameter::PARAMETER_REQUIRED),
+            new Argument("arg2", Parameter::PARAMETER_OPTIONAL),
+            new Argument("arg3", Parameter::PARAMETER_OPTIONAL),
+            new Argument("arg4", Parameter::PARAMETER_OPTIONAL),
+            new Argument("arg5", Parameter::PARAMETER_OPTIONAL),
         ]);
 
         $this->parameter->checkCommandOptions();
@@ -277,7 +279,7 @@ class ParameterTest extends AbstractTestClass
 
     public function testSetCommandOptionsWithArrayThrowsException()
     {
-        $this->expectException(\Parable\Console\Exception::class);
+        $this->expectException(Exception::class);
         $this->expectExceptionMessage("Options must be instances of Parameter\Option. invalid_option is not.");
 
         $this->parameter->setCommandOptions(["invalid_option" => []]);
@@ -285,7 +287,7 @@ class ParameterTest extends AbstractTestClass
 
     public function testSetCommandArgumentsWithArrayThrowsException()
     {
-        $this->expectException(\Parable\Console\Exception::class);
+        $this->expectException(Exception::class);
         $this->expectExceptionMessage("Arguments must be instances of Parameter\Argument. The item at index 0 is not.");
 
         $this->parameter->setCommandArguments([[]]);
@@ -300,8 +302,8 @@ class ParameterTest extends AbstractTestClass
         ]);
 
         $this->parameter->setCommandArguments([
-            new Argument("arg1", \Parable\Console\Parameter::PARAMETER_OPTIONAL),
-            new Argument("arg2", \Parable\Console\Parameter::PARAMETER_OPTIONAL),
+            new Argument("arg1", Parameter::PARAMETER_OPTIONAL),
+            new Argument("arg2", Parameter::PARAMETER_OPTIONAL),
         ]);
 
         $this->parameter->checkCommandArguments();
@@ -339,7 +341,7 @@ class ParameterTest extends AbstractTestClass
 
     public function testParameterRequiredOnlyAcceptConstantValues()
     {
-        $this->expectException(\Parable\Console\Exception::class);
+        $this->expectException(Exception::class);
         $this->expectExceptionMessage("Required must be one of the PARAMETER_* constants.");
 
         new Argument("test", 418);
@@ -347,12 +349,12 @@ class ParameterTest extends AbstractTestClass
 
     public function testParameterValueRequiredOnlyAcceptConstantValues()
     {
-        $this->expectException(\Parable\Console\Exception::class);
+        $this->expectException(Exception::class);
         $this->expectExceptionMessage("Value type must be one of the OPTION_* constants.");
 
         new Option(
             "test",
-            \Parable\Console\Parameter::PARAMETER_REQUIRED,
+            Parameter::PARAMETER_REQUIRED,
             418
         );
     }
@@ -379,7 +381,7 @@ class ParameterTest extends AbstractTestClass
         $this->parameter->setCommandOptions([
             'option' => new Option(
                 "option",
-                \Parable\Console\Parameter::OPTION_VALUE_OPTIONAL,
+                Parameter::OPTION_VALUE_OPTIONAL,
                 $default
             ),
         ]);
@@ -414,8 +416,8 @@ class ParameterTest extends AbstractTestClass
     public function testSingleShortOption()
     {
         $this->parameter->setCommandOptions([
-            new Option("a", \Parable\Console\Parameter::OPTION_VALUE_OPTIONAL, null, true),
-            new Option("b", \Parable\Console\Parameter::OPTION_VALUE_OPTIONAL, null, true),
+            new Option("a", Parameter::OPTION_VALUE_OPTIONAL, null, true),
+            new Option("b", Parameter::OPTION_VALUE_OPTIONAL, null, true),
         ]);
 
         $this->parameter->setParameters([
@@ -436,8 +438,8 @@ class ParameterTest extends AbstractTestClass
     public function testSeparateShortOptions()
     {
         $this->parameter->setCommandOptions([
-            new Option("a", \Parable\Console\Parameter::OPTION_VALUE_OPTIONAL, null, true),
-            new Option("b", \Parable\Console\Parameter::OPTION_VALUE_OPTIONAL, null, true),
+            new Option("a", Parameter::OPTION_VALUE_OPTIONAL, null, true),
+            new Option("b", Parameter::OPTION_VALUE_OPTIONAL, null, true),
         ]);
 
         $this->parameter->setParameters([
@@ -459,9 +461,9 @@ class ParameterTest extends AbstractTestClass
     public function testCombinedShortOptions()
     {
         $this->parameter->setCommandOptions([
-            new Option("a", \Parable\Console\Parameter::OPTION_VALUE_OPTIONAL, null, true),
-            new Option("b", \Parable\Console\Parameter::OPTION_VALUE_OPTIONAL, null, true),
-            new Option("c", \Parable\Console\Parameter::OPTION_VALUE_OPTIONAL, null, true),
+            new Option("a", Parameter::OPTION_VALUE_OPTIONAL, null, true),
+            new Option("b", Parameter::OPTION_VALUE_OPTIONAL, null, true),
+            new Option("c", Parameter::OPTION_VALUE_OPTIONAL, null, true),
         ]);
 
         $this->parameter->setParameters([
@@ -483,9 +485,9 @@ class ParameterTest extends AbstractTestClass
 
     public function testShortOptionAndOptionValuesSetWithEqualSign()
     {
-        $optionA = new Option("a", \Parable\Console\Parameter::OPTION_VALUE_OPTIONAL, null, true);
-        $optionB = new Option("b", \Parable\Console\Parameter::OPTION_VALUE_OPTIONAL, null, true);
-        $optionC = new Option("c", \Parable\Console\Parameter::OPTION_VALUE_OPTIONAL, null, true);
+        $optionA = new Option("a", Parameter::OPTION_VALUE_OPTIONAL, null, true);
+        $optionB = new Option("b", Parameter::OPTION_VALUE_OPTIONAL, null, true);
+        $optionC = new Option("c", Parameter::OPTION_VALUE_OPTIONAL, null, true);
 
         $this->parameter->setCommandOptions([$optionA, $optionB, $optionC]);
 
@@ -508,8 +510,8 @@ class ParameterTest extends AbstractTestClass
     public function testValueOptionsWithEqualSigns()
     {
         $this->parameter->setCommandOptions([
-            new Option("aa", \Parable\Console\Parameter::OPTION_VALUE_OPTIONAL),
-            new Option("bb", \Parable\Console\Parameter::OPTION_VALUE_OPTIONAL),
+            new Option("aa", Parameter::OPTION_VALUE_OPTIONAL),
+            new Option("bb", Parameter::OPTION_VALUE_OPTIONAL),
         ]);
 
         $this->parameter->setParameters([
@@ -530,8 +532,8 @@ class ParameterTest extends AbstractTestClass
     public function testSkippingUndefinedOptions()
     {
         $this->parameter->setCommandOptions([
-            new Option("a", \Parable\Console\Parameter::OPTION_VALUE_OPTIONAL, null, true),
-            new Option("c", \Parable\Console\Parameter::OPTION_VALUE_OPTIONAL, null, true),
+            new Option("a", Parameter::OPTION_VALUE_OPTIONAL, null, true),
+            new Option("c", Parameter::OPTION_VALUE_OPTIONAL, null, true),
         ]);
 
         $this->parameter->setParameters([
@@ -552,10 +554,10 @@ class ParameterTest extends AbstractTestClass
 
     public function testFlagOptionCanOnlyHaveSingleLetterName()
     {
-        $this->expectException(\Parable\Console\Exception::class);
+        $this->expectException(Exception::class);
         $this->expectExceptionMessage('Flag options can only have a single-letter name.');
 
-        new Option("test", \Parable\Console\Parameter::OPTION_VALUE_OPTIONAL, null, true);
+        new Option("test", Parameter::OPTION_VALUE_OPTIONAL, null, true);
     }
 
     public function testLongOptionOnlyPickedUpFromDoubleDash()
@@ -596,7 +598,7 @@ class ParameterTest extends AbstractTestClass
     public function testFlagOptionOnlyPickedUpFromSingleDash()
     {
         $this->parameter->setCommandOptions([
-            new Option("a", \Parable\Console\Parameter::OPTION_VALUE_OPTIONAL, null, true),
+            new Option("a", Parameter::OPTION_VALUE_OPTIONAL, null, true),
         ]);
 
         $this->parameter->setParameters([

@@ -7,8 +7,8 @@ use Parable\Console\Parameter\Option;
 
 class Parameter
 {
-    const PARAMETER_REQUIRED    = 1;
-    const PARAMETER_OPTIONAL    = 2;
+    const PARAMETER_REQUIRED = 1;
+    const PARAMETER_OPTIONAL = 2;
 
     const OPTION_VALUE_REQUIRED = 11;
     const OPTION_VALUE_OPTIONAL = 12;
@@ -120,7 +120,7 @@ class Parameter
         if (count($optionParts) > 1) {
             list($key, $value) = $optionParts;
         } else {
-            $key   = $optionString;
+            $key = $optionString;
             $value = true;
         }
 
@@ -294,6 +294,7 @@ class Parameter
                 return $argument->getValue();
             }
         }
+
         return null;
     }
 
@@ -306,6 +307,7 @@ class Parameter
         foreach ($this->commandArguments as $argument) {
             $returnArray[$argument->getName()] = $argument->getValue();
         }
+
         return $returnArray;
     }
 
@@ -314,10 +316,10 @@ class Parameter
      */
     protected function reset(): void
     {
-        $this->scriptName  = null;
+        $this->scriptName = null;
         $this->commandName = null;
-        $this->options     = [];
-        $this->arguments   = [];
+        $this->options = [];
+        $this->arguments = [];
     }
 
     /**
@@ -333,6 +335,7 @@ class Parameter
             unset($this->arguments[0]);
             $this->arguments = array_values($this->arguments);
         }
+
         $this->commandNameEnabled = true;
     }
 

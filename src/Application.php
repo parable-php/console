@@ -2,7 +2,7 @@
 
 namespace Parable\Console;
 
-class App
+class Application
 {
     /**
      * @var Output
@@ -54,13 +54,11 @@ class App
         $this->parameter = $parameter;
 
         set_exception_handler(function (Exception $e) {
-            // @codeCoverageIgnoreStart
             $this->output->writeErrorBlock([$e->getMessage()]);
 
             if ($this->activeCommand) {
                 $this->output->writeln('<yellow>Usage</yellow>: ' . $this->activeCommand->getUsage());
             }
-            // @codeCoverageIgnoreEnd
         });
     }
 
@@ -140,19 +138,22 @@ class App
         }
     }
 
-    public function run()
+    public function run(): void
     {
         $defaultCommand = null;
-        $command        = null;
+        $command = null;
 
         if ($this->defaultCommand) {
             $defaultCommand = $this->getCommand($this->defaultCommand);
         }
+
         if (!$this->shouldOnlyUseDefaultCommand()) {
             $commandName = $this->parameter->getCommandName();
+
             if ($commandName) {
                 $command = $this->getCommand($commandName);
             }
+
             $this->parameter->enableCommandName();
         } else {
             $this->parameter->disableCommandName();
@@ -173,6 +174,6 @@ class App
         $this->parameter->setCommandOptions($command->getOptions());
         $this->parameter->checkCommandOptions();
 
-        return $command->run();
+        $command->run();
     }
 }

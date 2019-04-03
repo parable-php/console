@@ -2,7 +2,7 @@
 
 namespace Parable\Console\Parameter;
 
-abstract class Base
+abstract class AbstractParameter
 {
     /**
      * @var string|null

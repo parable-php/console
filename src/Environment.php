@@ -5,7 +5,7 @@ namespace Parable\Console;
 class Environment
 {
     const TERMINAL_DEFAULT_HEIGHT = 25;
-    const TERMINAL_DEFAULT_WIDTH  = 80;
+    const TERMINAL_DEFAULT_WIDTH = 80;
 
     public function getTerminalWidth(): int
     {

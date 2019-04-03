@@ -2,35 +2,40 @@
 
 namespace Parable\Console\Tests\Command;
 
+use Parable\Console\Application;
+use Parable\Console\Input;
+use Parable\Console\Output;
+use Parable\Console\Parameter;
+use Parable\Console\Command;
 use Parable\Console\Tests\AbstractTestClass;
 
 class HelpTest extends AbstractTestClass
 {
-    /** @var \Parable\Console\App */
-    protected $app;
+    /** @var Application */
+    protected $application;
 
-    /** @var \Parable\Console\Parameter */
+    /** @var Parameter */
     protected $parameter;
 
-    /** @var \Parable\Console\Command\Help */
+    /** @var Command\Help */
     protected $helpCommand;
 
     protected function setUp()
     {
         parent::setUp();
 
-        $this->app         = $this->container->build(\Parable\Console\App::class);
-        $this->parameter   = $this->container->build(\Parable\Console\Parameter::class);
+        $this->application = $this->container->build(Application::class);
+        $this->parameter = $this->container->build(Parameter::class);
 
-        $this->helpCommand = new \Parable\Console\Command\Help();
-        $this->app->addCommand($this->helpCommand);
+        $this->helpCommand = new Command\Help();
+        $this->application->addCommand($this->helpCommand);
 
-        $this->app->setName("Help Test App");
+        $this->application->setName("Help Test App");
 
         $this->helpCommand->prepare(
-            $this->app,
-            $this->container->build(\Parable\Console\Output::class),
-            $this->container->build(\Parable\Console\Input::class),
+            $this->application,
+            $this->container->build(Output::class),
+            $this->container->build(Input::class),
             $this->parameter
         );
     }

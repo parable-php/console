@@ -23,8 +23,8 @@ class Help extends Command
 
     public function run(): void
     {
-        if ($this->app->getName()) {
-            $this->output->writeln($this->app->getName());
+        if ($this->application->getName()) {
+            $this->output->writeln($this->application->getName());
             $this->output->newline();
         }
 
@@ -37,19 +37,19 @@ class Help extends Command
         }
     }
 
-    protected function showGeneralHelp()
+    protected function showGeneralHelp(): void
     {
         $this->output->writeln("<yellow>Available commands:</yellow>");
 
         $longestName = 0;
-        foreach ($this->app->getCommands() as $command) {
+        foreach ($this->application->getCommands() as $command) {
             $strlen = strlen($command->getName());
             if ($strlen > $longestName) {
                 $longestName = $strlen;
             }
         }
 
-        foreach ($this->app->getCommands() as $command) {
+        foreach ($this->application->getCommands() as $command) {
             $name = $command->getName();
             $this->output->write(str_pad("  <green>{$name}</green>", $longestName + 22, ' ', STR_PAD_RIGHT));
             $this->output->write("{$command->getDescription()}");
@@ -62,9 +62,9 @@ class Help extends Command
      *
      * @param string $commandName
      */
-    protected function showCommandHelp($commandName)
+    protected function showCommandHelp($commandName): void
     {
-        $command = $this->app->getCommand($commandName);
+        $command = $this->application->getCommand($commandName);
 
         if (!$command) {
             $this->output->writeln("<red>Unknown command:</red> {$commandName}");

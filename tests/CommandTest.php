@@ -2,22 +2,29 @@
 
 namespace Parable\Console\Tests;
 
-use Parable\Console\App;
+use Parable\Console\Application;
 use Parable\Console\Command;
 use Parable\Console\Input;
 use Parable\Console\Output;
 use Parable\Console\Parameter;
+use Parable\Console\Tests\Classes\ValueClass;
 
 class CommandTest extends AbstractTestClass
 {
-    /** @var \Parable\Console\Command */
+    /**
+     * @var Command
+     */
     protected $command;
+
+    protected $value;
 
     protected function setUp()
     {
         parent::setUp();
 
-        $this->command = new \Parable\Console\Command();
+        $this->command = new Command();
+
+        ValueClass::clear();
     }
 
     public function testSetGetName()
@@ -35,19 +42,21 @@ class CommandTest extends AbstractTestClass
     public function testSetGetCallableAndRunCommand()
     {
         $callable = function () {
-            return 'Yo!';
+            ValueClass::set('Yo!');
         };
         $this->command->setCallable($callable);
 
+        $this->command->run();
+
         self::assertSame($callable, $this->command->getCallable());
-        self::assertSame('Yo!', $this->command->run());
+        self::assertSame('Yo!', ValueClass::get());
     }
 
     public function testAddOptionAndGetOptions()
     {
         $this->command->addOption(
             'option1',
-            \Parable\Console\Parameter::OPTION_VALUE_REQUIRED,
+            Parameter::OPTION_VALUE_REQUIRED,
             'smart'
         );
 
@@ -55,7 +64,7 @@ class CommandTest extends AbstractTestClass
 
         $option1 = $options["option1"];
 
-        self::assertInstanceOf(\Parable\Console\Parameter\Option::class, $option1);
+        self::assertInstanceOf(Parameter\Option::class, $option1);
         self::assertSame("option1", $option1->getName());
         self::assertTrue($option1->isValueRequired());
         self::assertSame("smart", $option1->getDefaultValue());
@@ -63,20 +72,20 @@ class CommandTest extends AbstractTestClass
 
     public function testAddArgumentAndGetArguments()
     {
-        $this->command->addArgument('arg1', \Parable\Console\Parameter::PARAMETER_REQUIRED);
-        $this->command->addArgument('arg2', \Parable\Console\Parameter::PARAMETER_OPTIONAL, 12);
+        $this->command->addArgument('arg1', Parameter::PARAMETER_REQUIRED);
+        $this->command->addArgument('arg2', Parameter::PARAMETER_OPTIONAL, 12);
 
         $arguments = $this->command->getArguments();
 
         $argument1 = $arguments[0];
         $argument2 = $arguments[1];
 
-        self::assertInstanceOf(\Parable\Console\Parameter\Argument::class, $argument1);
+        self::assertInstanceOf(Parameter\Argument::class, $argument1);
         self::assertSame("arg1", $argument1->getName());
         self::assertTrue($argument1->isRequired());
         self::assertSame(null, $argument1->getDefaultValue());
 
-        self::assertInstanceOf(\Parable\Console\Parameter\Argument::class, $argument2);
+        self::assertInstanceOf(Parameter\Argument::class, $argument2);
         self::assertSame("arg2", $argument2->getName());
         self::assertFalse($argument2->isRequired());
         self::assertSame(12, $argument2->getDefaultValue());
@@ -85,21 +94,23 @@ class CommandTest extends AbstractTestClass
     public function testPrepareAcceptsAndPassesInstancesToCallbackProperly()
     {
         $this->command->prepare(
-            $this->container->build(\Parable\Console\App::class),
-            $this->container->build(\Parable\Console\Output::class),
-            $this->container->build(\Parable\Console\Input::class),
-            $this->container->build(\Parable\Console\Parameter::class)
+            $this->container->build(Application::class),
+            $this->container->build(Output::class),
+            $this->container->build(Input::class),
+            $this->container->build(Parameter::class)
         );
-        $this->command->setCallable(function ($app, $output, $input, $parameter) {
-            return [$app, $output, $input, $parameter];
+        $this->command->setCallable(function ($application, $output, $input, $parameter) {
+            ValueClass::set([$application, $output, $input, $parameter]);
         });
 
-        $instances = $this->command->run();
+        $this->command->run();
 
-        self::assertInstanceOf(\Parable\Console\App::class, $instances[0]);
-        self::assertInstanceOf(\Parable\Console\Output::class, $instances[1]);
-        self::assertInstanceOf(\Parable\Console\Input::class, $instances[2]);
-        self::assertInstanceOf(\Parable\Console\Parameter::class, $instances[3]);
+        $instances = ValueClass::get();
+
+        self::assertInstanceOf(Application::class, $instances[0]);
+        self::assertInstanceOf(Output::class, $instances[1]);
+        self::assertInstanceOf(Input::class, $instances[2]);
+        self::assertInstanceOf(Parameter::class, $instances[3]);
     }
 
     public function testExtendingCommandClassWorks()
@@ -107,16 +118,19 @@ class CommandTest extends AbstractTestClass
         $command = new class extends Command {
             protected $name = 'testcommand';
             protected $description = 'This is a test command.';
-            public function run()
+            public function run(): void
             {
-                return 'OK';
+                ValueClass::set('OK');
             }
         };
 
         self::assertSame('testcommand', $command->getName());
         self::assertSame('This is a test command.', $command->getDescription());
         self::assertNull($command->getCallable());
-        self::assertSame('OK', $command->run());
+
+        $command->run();
+
+        self::assertSame('OK', ValueClass::get());
     }
 
     public function testCommandCanCallOtherCommand()
@@ -124,36 +138,34 @@ class CommandTest extends AbstractTestClass
         $command = new class extends Command {
             protected $name = 'calling-command';
             protected $description = 'This is a test command.';
-            public function run()
+            public function run(): void
             {
                 $command2 = new class extends Command {
                     protected $name = 'testcommand';
                     protected $description = 'This is a test command.';
-                    public function run()
+                    public function run(): void
                     {
-                        return 'OK';
+                        ValueClass::set('OK');
                     }
                 };
 
-                return 'Command returned: ' . $this->runCommand($command2);
+                $this->runCommand($command2);
+
+                ValueClass::set('Command returned: ' . ValueClass::get());
             }
         };
 
         $command->prepare(
-            $this->container->get(App::class),
+            $this->container->get(Application::class),
             $this->container->get(Output::class),
             $this->container->get(Input::class),
             $this->container->get(Parameter::class)
         );
 
-        self::assertSame('calling-command', $command->getName());
-        self::assertSame('Command returned: OK', $command->run());
-    }
+        $command->run();
 
-    public function testCommandRunWithoutCallableReturnsFalse()
-    {
-        $command = $this->createNewCommand();
-        self::assertFalse($command->run());
+        self::assertSame('calling-command', $command->getName());
+        self::assertSame('Command returned: OK', ValueClass::get());
     }
 
     public function testGetUsageWithNothingSetIsEmptyString()
@@ -165,10 +177,10 @@ class CommandTest extends AbstractTestClass
     public function testGetUsageWithEveryCombination()
     {
         $command = $this->createNewCommand("test-command");
-        $command->addOption("opt1", \Parable\Console\Parameter::OPTION_VALUE_OPTIONAL);
-        $command->addOption("opt2", \Parable\Console\Parameter::OPTION_VALUE_REQUIRED);
-        $command->addArgument("arg1", \Parable\Console\Parameter::PARAMETER_REQUIRED);
-        $command->addArgument("arg2", \Parable\Console\Parameter::PARAMETER_OPTIONAL);
+        $command->addOption("opt1", Parameter::OPTION_VALUE_OPTIONAL);
+        $command->addOption("opt2", Parameter::OPTION_VALUE_REQUIRED);
+        $command->addArgument("arg1", Parameter::PARAMETER_REQUIRED);
+        $command->addArgument("arg2", Parameter::PARAMETER_OPTIONAL);
 
         self::assertSame(
             "test-command arg1 [arg2] [--opt1[=value]] [--opt2=value]",
@@ -176,18 +188,20 @@ class CommandTest extends AbstractTestClass
         );
     }
 
-    protected function createNewCommand($name = null)
+    protected function createNewCommand(string $name = null): Command
     {
-        $command = new \Parable\Console\Command();
+        $command = new Command();
         $command->prepare(
-            $this->container->build(\Parable\Console\App::class),
-            $this->container->build(\Parable\Console\Output::class),
-            $this->container->build(\Parable\Console\Input::class),
-            $this->container->build(\Parable\Console\Parameter::class)
+            $this->container->build(Application::class),
+            $this->container->build(Output::class),
+            $this->container->build(Input::class),
+            $this->container->build(Parameter::class)
         );
-        if ($name) {
+
+        if ($name !== null) {
             $command->setName($name);
         }
+
         return $command;
     }
 }

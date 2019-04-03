@@ -5,7 +5,7 @@ namespace Parable\Console\Parameter;
 use Parable\Console\Exception;
 use Parable\Console\Parameter;
 
-class Argument extends Base
+class Argument extends AbstractParameter
 {
     /**
      * @var int

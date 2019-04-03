@@ -7,7 +7,7 @@ use Parable\Console\Output;
 
 class OutputTest extends AbstractTestClass
 {
-    /** @var \Parable\Console\Output|\PHPUnit_Framework_MockObject_MockObject */
+    /** @var Output|\PHPUnit_Framework_MockObject_MockObject */
     protected $output;
 
     /** @var Environment */
@@ -21,7 +21,7 @@ class OutputTest extends AbstractTestClass
         parent::setUp();
 
         // We mock out parseTags, because it adds too many escape codes. We'll test parseTags concretely later.
-        $this->output = $this->createPartialMock(\Parable\Console\Output::class, ['parseTags', 'isInteractiveShell']);
+        $this->output = $this->createPartialMock(Output::class, ['parseTags', 'isInteractiveShell']);
         $this->output->__construct(...$this->container->getDependenciesFor(Output::class));
 
         $this->environment = $this->container->get(Environment::class);
@@ -324,30 +324,16 @@ class OutputTest extends AbstractTestClass
         self::assertSame($this->addTag('<tag>unknown</tag>'), $output->parseTags('<tag>unknown</tag>'));
     }
 
-    /**
-     * NOTE: All write actions are appended with the default Tag from Output's tags array.
-     *
-     * Use only this method to compare actual output to string values written.
-     *
-     * @param string $expected
-     * @param string $actual
-     */
-    protected function assertSameWithTag($expected, $actual)
+    protected function assertSameWithTag(string $expected, string $actual): void
     {
         $expected = $this->addTag($expected);
         self::assertSame($expected, $actual);
     }
 
-    /**
-     * Add the default tag where it's supposed to go.
-     *
-     * @param string $value
-     * @param int    $amount
-     * @return mixed|string
-     */
-    protected function addTag($value, $amount = 1)
+    protected function addTag(string $value, int $amount = 1)
     {
         $defaultTag = str_repeat($this->defaultTag, $amount);
+
         if (strpos($value, "\n") !== false) {
             // If there's new lines, the default tag is placed just before the newline.
             // At the end of the string, there won't be another default tag.
@@ -356,6 +342,7 @@ class OutputTest extends AbstractTestClass
             // If this is just a line with no newline, there will be a default tag at the end
             $value = $value . $defaultTag;
         }
+
         return $value;
     }
 }

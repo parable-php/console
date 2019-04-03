@@ -8,9 +8,9 @@ use Parable\Console\Parameter\Option;
 class Command
 {
     /**
-     * @var App
+     * @var Application
      */
-    protected $app;
+    protected $application;
 
     /**
      * @var Output
@@ -53,14 +53,14 @@ class Command
     protected $arguments = [];
 
     public function prepare(
-        App $app,
+        Application $application,
         Output $output,
         Input $input,
         Parameter $parameter
-    ) {
-        $this->app       = $app;
-        $this->output    = $output;
-        $this->input     = $input;
+    ): void {
+        $this->application = $application;
+        $this->output = $output;
+        $this->input = $input;
         $this->parameter = $parameter;
     }
 
@@ -162,26 +162,24 @@ class Command
         return implode(' ', $string);
     }
 
-    public function run()
+    public function run(): void
     {
         $callable = $this->getCallable();
         if (is_callable($callable)) {
-            return $callable($this->app, $this->output, $this->input, $this->parameter);
+            $callable($this->application, $this->output, $this->input, $this->parameter);
         }
-
-        return false;
     }
 
     /**
      * @param string[] $parameters
      */
-    protected function runCommand(Command $command, array $parameters = [])
+    protected function runCommand(Command $command, array $parameters = []): void
     {
         $parameter = new Parameter();
         $parameter->setParameters($parameters);
 
-        $command->prepare($this->app, $this->output, $this->input, $parameter);
+        $command->prepare($this->application, $this->output, $this->input, $parameter);
 
-        return $command->run();
+        $command->run();
     }
 }

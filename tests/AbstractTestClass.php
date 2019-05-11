@@ -10,7 +10,7 @@ class AbstractTestClass extends TestCase
     /** @var Container */
     protected $container;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -25,7 +25,7 @@ class AbstractTestClass extends TestCase
      *
      * @return string
      */
-    public function getActualOutputAndClean()
+    public function getActualOutputAndClean(): string
     {
         $content = parent::getActualOutput();
         ob_clean();
@@ -35,7 +35,7 @@ class AbstractTestClass extends TestCase
     /**
      * @return array
      */
-    public function dpTrueFalse()
+    public function dpTrueFalse(): array
     {
         return [
             [true],

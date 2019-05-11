@@ -9,24 +9,32 @@ class EnvironmentTest extends AbstractTestClass
     /** @var Environment */
     protected $environment;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
         $this->environment = $this->createPartialMock(Environment::class, ['isInteractiveShell']);
     }
 
-    public function testGetTerminalWidthReturnsDefaultIfNoInteractiveShell()
+    public function testGetTerminalWidthAndHeightReturnNonZeroInteger(): void
+    {
+        $this->environment->method('isInteractiveShell')->willReturn(true);
+
+        self::assertGreaterThan(0, $this->environment->getTerminalWidth());
+        self::assertGreaterThan(0, $this->environment->getTerminalHeight());
+    }
+
+    public function testGetTerminalWidthReturnsDefaultIfNoInteractiveShell(): void
     {
         $this->environment->method('isInteractiveShell')->willReturn(false);
 
         self::assertSame(80, $this->environment->getTerminalWidth());
     }
 
-    public function testGetTerminalHeightReturnsDefaultIfNoInteractiveShell()
+    public function testGetTerminalHeightReturnsDefaultIfNoInteractiveShell(): void
     {
         $this->environment->method('isInteractiveShell')->willReturn(false);
 
-        self::assertSame(25, $this->environment->getTerminalHeight());
+        self::assertSame(24, $this->environment->getTerminalHeight());
     }
 }

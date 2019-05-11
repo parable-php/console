@@ -37,7 +37,7 @@ class ApplicationTest extends AbstractTestClass
      */
     protected $commandReturnOptionValue;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -80,7 +80,7 @@ class ApplicationTest extends AbstractTestClass
         ValueClass::clear();
     }
 
-    public function testAddCommands()
+    public function testAddCommands(): void
     {
         $application = $this->container->buildAll(Application::class);
         self::assertCount(0, $application->getCommands());
@@ -93,13 +93,13 @@ class ApplicationTest extends AbstractTestClass
         self::assertCount(2, $application->getCommands());
     }
 
-    public function testAppSetGetName()
+    public function testAppSetGetName(): void
     {
         $this->application->setName('Super-application');
         self::assertSame('Super-application', $this->application->getName());
     }
 
-    public function testAppAddGetCommand()
+    public function testAppAddGetCommand(): void
     {
         $commandGot = $this->application->getCommand('test1');
 
@@ -116,13 +116,13 @@ class ApplicationTest extends AbstractTestClass
         self::assertSame('OK2', ValueClass::get());
     }
 
-    public function testHasCommand()
+    public function testHasCommand(): void
     {
         self::assertTrue($this->application->hasCommand('test1'));
         self::assertFalse($this->application->hasCommand('nope not this one'));
     }
 
-    public function testAppGetCommandsReturnsAll()
+    public function testAppGetCommandsReturnsAll(): void
     {
         $commands = $this->application->getCommands();
 
@@ -137,19 +137,19 @@ class ApplicationTest extends AbstractTestClass
         self::assertSame('OK2', ValueClass::get());
     }
 
-    public function testAppGetCommandsWithoutCommandsReturnsEmptyArray()
+    public function testAppGetCommandsWithoutCommandsReturnsEmptyArray(): void
     {
         $application = $this->container->build(Application::class);
         self::assertSame([], $application->getCommands());
     }
 
-    public function testAppGetNonExistingCommandReturnsNull()
+    public function testAppGetNonExistingCommandReturnsNull(): void
     {
         $application = $this->container->build(Application::class);
         self::assertNull($application->getCommand('nope'));
     }
 
-    public function testSetDefaultCommandRunsDefaultCommand()
+    public function testSetDefaultCommandRunsDefaultCommand(): void
     {
         $this->application->setDefaultCommand($this->command1);
 
@@ -158,7 +158,7 @@ class ApplicationTest extends AbstractTestClass
         self::assertSame('OK1', ValueClass::get());
     }
 
-    public function testSetDefaultCommandByNameRunsDefaultCommand()
+    public function testSetDefaultCommandByNameRunsDefaultCommand(): void
     {
         self::assertNull(ValueClass::get());
 
@@ -175,7 +175,7 @@ class ApplicationTest extends AbstractTestClass
         self::assertSame('OK2', ValueClass::get());
     }
 
-    public function testPassCommandOnCommandLineRunsAppropriateCommand()
+    public function testPassCommandOnCommandLineRunsAppropriateCommand(): void
     {
         self::assertNull(ValueClass::get());
 
@@ -203,7 +203,7 @@ class ApplicationTest extends AbstractTestClass
         self::assertSame("OK1", ValueClass::get());
     }
 
-    public function testRemoveCommandByName()
+    public function testRemoveCommandByName(): void
     {
         $application = new Application(
             $this->container->build(Output::class),
@@ -254,7 +254,7 @@ class ApplicationTest extends AbstractTestClass
         }
     }
 
-    public function testOptionalOptionWithRequiredValueThrowsExceptionIfNoValue()
+    public function testOptionalOptionWithRequiredValueThrowsExceptionIfNoValue(): void
     {
         // First test the regular app instance, showing it does not care if the option isn't there
         $this->command1->addOption(
@@ -279,7 +279,7 @@ class ApplicationTest extends AbstractTestClass
         $application->run();
     }
 
-    public function testOptionWithValuePassedWorksProperly()
+    public function testOptionWithValuePassedWorksProperly(): void
     {
         $_SERVER["argv"] = ['./test.php', '--option=passed value here!'];
         $application = $this->container->buildAll(Application::class);
@@ -297,7 +297,7 @@ class ApplicationTest extends AbstractTestClass
         self::assertSame('passed value here!', ValueClass::get());
     }
 
-    public function testOptionWithDefaultValueWorksProperly()
+    public function testOptionWithDefaultValueWorksProperly(): void
     {
         $_SERVER["argv"] = ['./test.php', '--option'];
         $application = $this->container->buildAll(Application::class);
@@ -315,7 +315,7 @@ class ApplicationTest extends AbstractTestClass
         self::assertSame('default value is here!', ValueClass::get());
     }
 
-    public function testThrowsExceptionWhenRanWithoutCommand()
+    public function testThrowsExceptionWhenRanWithoutCommand(): void
     {
         $this->expectExceptionMessage("No valid commands found.");
         $this->expectException(Exception::class);

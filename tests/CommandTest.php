@@ -7,6 +7,8 @@ use Parable\Console\Command;
 use Parable\Console\Input;
 use Parable\Console\Output;
 use Parable\Console\Parameter;
+use Parable\Console\Parameters\ArgumentParameter;
+use Parable\Console\Parameters\OptionParameter;
 use Parable\Console\Tests\Classes\ValueClass;
 
 class CommandTest extends AbstractTestClass
@@ -18,7 +20,7 @@ class CommandTest extends AbstractTestClass
 
     protected $value;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -27,19 +29,19 @@ class CommandTest extends AbstractTestClass
         ValueClass::clear();
     }
 
-    public function testSetGetName()
+    public function testSetGetName(): void
     {
         $this->command->setName('name');
         self::assertSame('name', $this->command->getName());
     }
 
-    public function testSetGetDescription()
+    public function testSetGetDescription(): void
     {
         $this->command->setDescription('description');
         self::assertSame('description', $this->command->getDescription());
     }
 
-    public function testSetGetCallableAndRunCommand()
+    public function testSetGetCallableAndRunCommand(): void
     {
         $callable = function () {
             ValueClass::set('Yo!');
@@ -52,7 +54,7 @@ class CommandTest extends AbstractTestClass
         self::assertSame('Yo!', ValueClass::get());
     }
 
-    public function testAddOptionAndGetOptions()
+    public function testAddOptionAndGetOptions(): void
     {
         $this->command->addOption(
             'option1',
@@ -64,13 +66,13 @@ class CommandTest extends AbstractTestClass
 
         $option1 = $options["option1"];
 
-        self::assertInstanceOf(Parameter\Option::class, $option1);
+        self::assertInstanceOf(OptionParameter::class, $option1);
         self::assertSame("option1", $option1->getName());
         self::assertTrue($option1->isValueRequired());
         self::assertSame("smart", $option1->getDefaultValue());
     }
 
-    public function testAddArgumentAndGetArguments()
+    public function testAddArgumentAndGetArguments(): void
     {
         $this->command->addArgument('arg1', Parameter::PARAMETER_REQUIRED);
         $this->command->addArgument('arg2', Parameter::PARAMETER_OPTIONAL, 12);
@@ -80,18 +82,18 @@ class CommandTest extends AbstractTestClass
         $argument1 = $arguments[0];
         $argument2 = $arguments[1];
 
-        self::assertInstanceOf(Parameter\Argument::class, $argument1);
+        self::assertInstanceOf(ArgumentParameter::class, $argument1);
         self::assertSame("arg1", $argument1->getName());
         self::assertTrue($argument1->isRequired());
         self::assertSame(null, $argument1->getDefaultValue());
 
-        self::assertInstanceOf(Parameter\Argument::class, $argument2);
+        self::assertInstanceOf(ArgumentParameter::class, $argument2);
         self::assertSame("arg2", $argument2->getName());
         self::assertFalse($argument2->isRequired());
         self::assertSame(12, $argument2->getDefaultValue());
     }
 
-    public function testPrepareAcceptsAndPassesInstancesToCallbackProperly()
+    public function testPrepareAcceptsAndPassesInstancesToCallbackProperly(): void
     {
         $this->command->prepare(
             $this->container->build(Application::class),
@@ -113,7 +115,7 @@ class CommandTest extends AbstractTestClass
         self::assertInstanceOf(Parameter::class, $instances[3]);
     }
 
-    public function testExtendingCommandClassWorks()
+    public function testExtendingCommandClassWorks(): void
     {
         $command = new class extends Command {
             protected $name = 'testcommand';
@@ -133,7 +135,7 @@ class CommandTest extends AbstractTestClass
         self::assertSame('OK', ValueClass::get());
     }
 
-    public function testCommandCanCallOtherCommand()
+    public function testCommandCanCallOtherCommand(): void
     {
         $command = new class extends Command {
             protected $name = 'calling-command';
@@ -168,13 +170,13 @@ class CommandTest extends AbstractTestClass
         self::assertSame('Command returned: OK', ValueClass::get());
     }
 
-    public function testGetUsageWithNothingSetIsEmptyString()
+    public function testGetUsageWithNothingSetIsEmptyString(): void
     {
         $command = $this->createNewCommand();
         self::assertEmpty($command->getUsage());
     }
 
-    public function testGetUsageWithEveryCombination()
+    public function testGetUsageWithEveryCombination(): void
     {
         $command = $this->createNewCommand("test-command");
         $command->addOption("opt1", Parameter::OPTION_VALUE_OPTIONAL);

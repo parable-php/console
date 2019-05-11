@@ -6,10 +6,10 @@ use Parable\Console\Application;
 use Parable\Console\Input;
 use Parable\Console\Output;
 use Parable\Console\Parameter;
-use Parable\Console\Command;
+use Parable\Console\Commands;
 use Parable\Console\Tests\AbstractTestClass;
 
-class HelpTest extends AbstractTestClass
+class HelpCommandTest extends AbstractTestClass
 {
     /** @var Application */
     protected $application;
@@ -17,17 +17,17 @@ class HelpTest extends AbstractTestClass
     /** @var Parameter */
     protected $parameter;
 
-    /** @var Command\Help */
+    /** @var Commands\HelpCommand */
     protected $helpCommand;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
         $this->application = $this->container->build(Application::class);
         $this->parameter = $this->container->build(Parameter::class);
 
-        $this->helpCommand = new Command\Help();
+        $this->helpCommand = new Commands\HelpCommand();
         $this->application->addCommand($this->helpCommand);
 
         $this->application->setName("Help Test App");
@@ -40,7 +40,7 @@ class HelpTest extends AbstractTestClass
         );
     }
 
-    public function testRunListsAvailableCommandsAndDescription()
+    public function testRunListsAvailableCommandsAndDescription(): void
     {
         $this->helpCommand->run();
 
@@ -52,7 +52,7 @@ class HelpTest extends AbstractTestClass
         self::assertContains("Shows all commands available.", $content);
     }
 
-    public function testHelpOnSpecificCommandReturnsDescriptionAndUsage()
+    public function testHelpOnSpecificCommandReturnsDescriptionAndUsage(): void
     {
         $this->parameter->setCommandArguments($this->helpCommand->getArguments());
         $this->parameter->setParameters([
@@ -71,7 +71,7 @@ class HelpTest extends AbstractTestClass
         self::assertContains("Usage:", $content);
     }
 
-    public function testHelpOnUnknownCommandReturnsError()
+    public function testHelpOnUnknownCommandReturnsError(): void
     {
         $this->parameter->setCommandArguments($this->helpCommand->getArguments());
         $this->parameter->setParameters([

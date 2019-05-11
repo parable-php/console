@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Parable\Console\Parameter;
+namespace Parable\Console\Parameters;
 
 abstract class AbstractParameter
 {

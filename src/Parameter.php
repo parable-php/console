@@ -2,8 +2,8 @@
 
 namespace Parable\Console;
 
-use Parable\Console\Parameter\Argument;
-use Parable\Console\Parameter\Option;
+use Parable\Console\Parameters\ArgumentParameter;
+use Parable\Console\Parameters\OptionParameter;
 
 class Parameter
 {
@@ -44,12 +44,12 @@ class Parameter
     protected $arguments = [];
 
     /**
-     * @var Option[]
+     * @var OptionParameter[]
      */
     protected $commandOptions = [];
 
     /**
-     * @var Argument[]
+     * @var ArgumentParameter[]
      */
     protected $commandArguments = [];
 
@@ -173,12 +173,12 @@ class Parameter
     }
 
     /**
-     * @param Option[] $options
+     * @param OptionParameter[] $options
      */
     public function setCommandOptions(array $options): void
     {
         foreach ($options as $name => $option) {
-            if ((!$option instanceof Option)) {
+            if ((!$option instanceof OptionParameter)) {
                 throw Exception::fromMessage(
                     "Options must be instances of Parameter\\Option. %s is not.",
                     $name
@@ -245,13 +245,13 @@ class Parameter
     /**
      * Set the arguments from a command.
      *
-     * @param Argument[] $arguments
+     * @param ArgumentParameter[] $arguments
      */
     public function setCommandArguments(array $arguments): void
     {
         $orderedArguments = [];
         foreach ($arguments as $index => $argument) {
-            if (!($argument instanceof Argument)) {
+            if (!($argument instanceof ArgumentParameter)) {
                 throw Exception::fromMessage(
                     "Arguments must be instances of Parameter\\Argument. The item at index %d is not.",
                     $index

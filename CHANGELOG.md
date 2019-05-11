@@ -1,5 +1,15 @@
 # Parable Console
 
+## 0.3.0
+
+_Changes_
+
+- Renamed `Option` and `Argument` to have `Parameter` suffix for clarity (`OptionParameter` and `ArgumentParameter`).
+- Renamed `Help` command to `HelpCommand` for clarity.
+- Renamed `Command` and `Parameter` namespaces to plural for consistency.
+- Changed `Environment::TERMINAL_DEFAULT_HEIGHT` to 24.
+- Added `InputTest` to prevent future breaking changes to that class as well.
+
 ## 0.2.0
 
 _Changes_

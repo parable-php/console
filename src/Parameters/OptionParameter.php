@@ -1,11 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace Parable\Console\Parameter;
+namespace Parable\Console\Parameters;
 
 use Parable\Console\Exception;
 use Parable\Console\Parameter;
 
-class Option extends AbstractParameter
+class OptionParameter extends AbstractParameter
 {
     /**
      * @var int

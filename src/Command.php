@@ -2,8 +2,8 @@
 
 namespace Parable\Console;
 
-use Parable\Console\Parameter\Argument;
-use Parable\Console\Parameter\Option;
+use Parable\Console\Parameters\ArgumentParameter;
+use Parable\Console\Parameters\OptionParameter;
 
 class Command
 {
@@ -43,12 +43,12 @@ class Command
     protected $callable;
 
     /**
-     * @var Option[]
+     * @var OptionParameter[]
      */
     protected $options = [];
 
     /**
-     * @var Argument[]
+     * @var ArgumentParameter[]
      */
     protected $arguments = [];
 
@@ -100,7 +100,7 @@ class Command
         $defaultValue = null,
         bool $flagOption = false
     ): void {
-        $this->options[$name] = new Option(
+        $this->options[$name] = new OptionParameter(
             $name,
             $valueRequired,
             $defaultValue,
@@ -109,7 +109,7 @@ class Command
     }
 
     /**
-     * @return Option[]
+     * @return OptionParameter[]
      */
     public function getOptions(): array
     {
@@ -121,11 +121,11 @@ class Command
         int $required = Parameter::PARAMETER_OPTIONAL,
         $defaultValue = null
     ): void {
-        $this->arguments[] = new Argument($name, $required, $defaultValue);
+        $this->arguments[] = new ArgumentParameter($name, $required, $defaultValue);
     }
 
     /**
-     * @return Argument[]
+     * @return ArgumentParameter[]
      */
     public function getArguments(): array
     {

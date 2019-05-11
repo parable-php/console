@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace Parable\Console\Command;
+namespace Parable\Console\Commands;
 
 use Parable\Console\Command;
 
-class Help extends Command
+class HelpCommand extends Command
 {
     /**
      * @var string

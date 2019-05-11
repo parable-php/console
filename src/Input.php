@@ -56,7 +56,7 @@ class Input
         $this->disableRequireReturn();
 
         $input = null;
-        while (1) {
+        while (true) {
             $input = $this->getRaw();
             break;
         }

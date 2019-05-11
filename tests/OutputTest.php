@@ -16,7 +16,7 @@ class OutputTest extends AbstractTestClass
     /** @var string */
     protected $defaultTag = "\e[0m";
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -40,7 +40,7 @@ class OutputTest extends AbstractTestClass
             ->willReturn(false);
     }
 
-    public function testWrite()
+    public function testWrite(): void
     {
         $this->output->write('OK');
         $content = $this->getActualOutputAndClean();
@@ -48,7 +48,7 @@ class OutputTest extends AbstractTestClass
         self::assertSameWithTag("OK", $content);
     }
 
-    public function testWriteln()
+    public function testWriteln(): void
     {
         $this->output->writeln('OK');
         $content = $this->getActualOutputAndClean();
@@ -56,7 +56,7 @@ class OutputTest extends AbstractTestClass
         self::assertSameWithTag("OK\n", $content);
     }
 
-    public function testWritelnWithArray()
+    public function testWritelnWithArray(): void
     {
         $this->output->writelns([
             'line1',
@@ -67,7 +67,7 @@ class OutputTest extends AbstractTestClass
         self::assertSameWithTag("line1\nline2\n", $content);
     }
 
-    public function testNewline()
+    public function testNewline(): void
     {
         // Just one.
         $this->output->newline();
@@ -78,37 +78,37 @@ class OutputTest extends AbstractTestClass
         self::assertSame("\n\n\n", $this->getActualOutputAndClean());
     }
 
-    public function testCursorForward()
+    public function testCursorForward(): void
     {
         $this->output->cursorForward(1);
         self::assertSameWithTag("\e[1C", $this->getActualOutputAndClean());
     }
 
-    public function testCursorBackward()
+    public function testCursorBackward(): void
     {
         $this->output->cursorBackward(1);
         self::assertSameWithTag("\e[1D", $this->getActualOutputAndClean());
     }
 
-    public function testCursorUp()
+    public function testCursorUp(): void
     {
         $this->output->cursorUp(1);
         self::assertSameWithTag("\e[1A", $this->getActualOutputAndClean());
     }
 
-    public function testCursorDown()
+    public function testCursorDown(): void
     {
         $this->output->cursorDown(1);
         self::assertSameWithTag("\e[1B", $this->getActualOutputAndClean());
     }
 
-    public function testCursorPlace()
+    public function testCursorPlace(): void
     {
         $this->output->cursorPlace(4, 8);
         self::assertSameWithTag("\e[4;8H", $this->getActualOutputAndClean());
     }
 
-    public function testCursorPlaceDisablesClearLine()
+    public function testCursorPlaceDisablesClearLine(): void
     {
         $this->output->write("stuff!");
         self::assertTrue($this->output->isClearLineEnabled());
@@ -123,13 +123,13 @@ class OutputTest extends AbstractTestClass
         self::assertSame("stuff!\e[0m\e[1;1H\e[0m", $this->getActualOutputAndClean());
     }
 
-    public function testCls()
+    public function testCls(): void
     {
         $this->output->cls();
         self::assertSameWithTag("\ec", $this->getActualOutputAndClean());
     }
 
-    public function testClearLine()
+    public function testClearLine(): void
     {
         $this->output->write("12345");
         $this->output->clearLine();
@@ -154,7 +154,7 @@ class OutputTest extends AbstractTestClass
         );
     }
 
-    public function testWriteErrorBlock()
+    public function testWriteErrorBlock(): void
     {
         $this->output->writeErrorBlock(['error']);
 
@@ -173,7 +173,7 @@ class OutputTest extends AbstractTestClass
         );
     }
 
-    public function testWriteInfoBlock()
+    public function testWriteInfoBlock(): void
     {
         $this->output->writeInfoBlock(['info']);
 
@@ -192,7 +192,7 @@ class OutputTest extends AbstractTestClass
         );
     }
 
-    public function testWriteSuccessBlock()
+    public function testWriteSuccessBlock(): void
     {
         $this->output->writeSuccessBlock(['success']);
 
@@ -211,7 +211,7 @@ class OutputTest extends AbstractTestClass
         );
     }
 
-    public function testWriteBlockWithAnyTag()
+    public function testWriteBlockWithAnyTag(): void
     {
         $this->output->writeBlock(['any block'], ['anytag']);
 
@@ -230,7 +230,7 @@ class OutputTest extends AbstractTestClass
         );
     }
 
-    public function testWriteBlockWithTagsUsingMultipleTags()
+    public function testWriteBlockWithTagsUsingMultipleTags(): void
     {
         $this->output->writeBlock(['any block'], ["1", "2", "3"]);
 
@@ -249,7 +249,7 @@ class OutputTest extends AbstractTestClass
         );
     }
 
-    public function testWriteBlockWithTagsUsingNoTagsOutputsNoTags()
+    public function testWriteBlockWithTagsUsingNoTagsOutputsNoTags(): void
     {
         $this->output->writeBlock(['any block'], []);
 
@@ -268,7 +268,7 @@ class OutputTest extends AbstractTestClass
         );
     }
 
-    public function testWriteBlockWithTagsHandlesLineBreaksCorrectly()
+    public function testWriteBlockWithTagsHandlesLineBreaksCorrectly(): void
     {
         $this->output->writeBlock(["\nGive Me\n\nLots of newlines!\nThis should be the longest line.\n"], ['tag']);
 
@@ -292,7 +292,7 @@ class OutputTest extends AbstractTestClass
         );
     }
 
-    public function testParseTagsForRealThisTime()
+    public function testParseTagsForRealThisTime(): void
     {
         $output = $this->container->build(Output::class);
 
@@ -308,7 +308,7 @@ class OutputTest extends AbstractTestClass
         );
     }
 
-    public function testTagSetWorks()
+    public function testTagSetWorks(): void
     {
         $output = $this->container->build(Output::class);
 
@@ -318,7 +318,7 @@ class OutputTest extends AbstractTestClass
         );
     }
 
-    public function testUnknownTags()
+    public function testUnknownTags(): void
     {
         $output = $this->container->build(Output::class);
         self::assertSame($this->addTag('<tag>unknown</tag>'), $output->parseTags('<tag>unknown</tag>'));

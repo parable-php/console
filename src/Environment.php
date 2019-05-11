@@ -4,8 +4,8 @@ namespace Parable\Console;
 
 class Environment
 {
-    const TERMINAL_DEFAULT_HEIGHT = 25;
-    const TERMINAL_DEFAULT_WIDTH = 80;
+    public const TERMINAL_DEFAULT_HEIGHT = 24;
+    public const TERMINAL_DEFAULT_WIDTH = 80;
 
     public function getTerminalWidth(): int
     {
@@ -13,7 +13,7 @@ class Environment
             return self::TERMINAL_DEFAULT_WIDTH;
         }
 
-        return (int)shell_exec('tput cols');
+        return (int)shell_exec('TERM=ansi tput cols');
     }
 
     public function getTerminalHeight(): int
@@ -22,7 +22,7 @@ class Environment
             return self::TERMINAL_DEFAULT_HEIGHT;
         }
 
-        return (int)shell_exec('tput lines');
+        return (int)shell_exec('TERM=ansi tput lines');
     }
 
     public function isShellAvailable(): bool

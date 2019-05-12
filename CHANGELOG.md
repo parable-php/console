@@ -1,5 +1,11 @@
 # Parable Console
 
+## 0.3.1
+
+_Bugfixes_
+
+- `set_error_handler` has been removed.
+
 ## 0.3.0
 
 _Changes_

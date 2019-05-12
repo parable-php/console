@@ -55,16 +55,13 @@ class Application
         $this->input     = $input;
         $this->parameter = $parameter;
 
-        $throwableClosure = function (Throwable $e) {
+        set_exception_handler(function (Throwable $e): void {
             $this->output->writeErrorBlock([$e->getMessage()]);
 
             if ($this->activeCommand) {
                 $this->output->writeln('<yellow>Usage</yellow>: ' . $this->activeCommand->getUsage());
             }
-        };
-
-        set_exception_handler($throwableClosure);
-        set_error_handler($throwableClosure);
+        });
     }
 
     public function setName(string $name): void

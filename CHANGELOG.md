@@ -1,5 +1,12 @@
 # Parable Console
 
+## 0.4.1
+
+_Bugfixes_
+
+- When instantiating a command that was added with `addCommandByNameAndClass`, it was not prepared properly. Now it is.
+- In addition, `Application::run()` will check whether a command is already prepared and do so if needed.
+
 ## 0.4.0
 
 _Changes_

@@ -101,7 +101,7 @@ class ApplicationTest extends AbstractTestClass
         self::assertSame('Super-application', $this->application->getName());
     }
 
-    public function testAddGetCommand(): void
+    public function testGetCommand(): void
     {
         $commandGot = $this->application->getCommand('test1');
 
@@ -118,18 +118,39 @@ class ApplicationTest extends AbstractTestClass
         self::assertSame('OK2', ValueClass::get());
     }
 
+    public function testAddCommand(): void
+    {
+        self::assertFalse($this->container->has(TestCommand::class));
+
+        $testCommandBeforePrepare = $this->container->get(TestCommand::class);
+
+        self::assertFalse($testCommandBeforePrepare->isPrepared());
+
+        $this->application->addCommand($testCommandBeforePrepare);
+
+        /** @var TestCommand $testCommand */
+        $testCommand = $this->application->getCommand('test-command');
+
+        self::assertTrue($testCommand->isPrepared());
+
+        self::assertSame('test-command', $testCommand->getName());
+    }
+
     public function testAddCommandByClassName(): void
     {
-        self::assertFalse($this->container->has(HelpCommand::class));
+        self::assertFalse($this->container->has(TestCommand::class));
 
         $this->application->addCommandByNameAndClass('test-command', TestCommand::class);
 
         // Since we added it by name and class, it's not yet instanced or cached
-        self::assertFalse($this->container->has(HelpCommand::class));
+        self::assertFalse($this->container->has(TestCommand::class));
 
-        $helpCommand = $this->application->getCommand('test-command');
+        /** @var TestCommand $testCommand */
+        $testCommand = $this->application->getCommand('test-command');
 
-        self::assertSame('test-command', $helpCommand->getName());
+        self::assertTrue($testCommand->isPrepared());
+
+        self::assertSame('test-command', $testCommand->getName());
 
         // Now that we've requested it, it is instanced & cached
         self::assertTrue($this->container->has(TestCommand::class));
@@ -141,7 +162,7 @@ class ApplicationTest extends AbstractTestClass
         self::assertFalse($this->application->hasCommand('nope not this one'));
     }
 
-    public function testAppGetCommandsReturnsAll(): void
+    public function testGetCommandsReturnsAll(): void
     {
         $commands = $this->application->getCommands();
 
@@ -156,13 +177,13 @@ class ApplicationTest extends AbstractTestClass
         self::assertSame('OK2', ValueClass::get());
     }
 
-    public function testAppGetCommandsWithoutCommandsReturnsEmptyArray(): void
+    public function testGetCommandsWithoutCommandsReturnsEmptyArray(): void
     {
         $application = $this->container->build(Application::class);
         self::assertSame([], $application->getCommands());
     }
 
-    public function testAppGetNonExistingCommandReturnsNull(): void
+    public function testGetNonExistingCommandReturnsNull(): void
     {
         $application = $this->container->build(Application::class);
         self::assertNull($application->getCommand('nope'));

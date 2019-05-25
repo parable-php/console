@@ -84,7 +84,7 @@ class Application
 
     public function addCommand(Command $command): void
     {
-        $command->prepare($this, $this->output, $this->input, $this->parameter);
+        $this->prepareCommand($command);
         $this->commands[$command->getName()] = $command;
     }
 
@@ -136,7 +136,7 @@ class Application
         }
 
         if (is_string($this->commands[$commandName])) {
-            $this->commands[$commandName] = $this->container->get($this->commands[$commandName]);
+            $this->addCommand($this->container->get($this->commands[$commandName]));
         }
 
         return $this->commands[$commandName];
@@ -221,6 +221,10 @@ class Application
             throw Exception::fromMessage('No valid commands found.');
         }
 
+        if (!$command->isPrepared()) {
+            $this->prepareCommand($command);
+        }
+
         $this->activeCommand = $command;
 
         $this->parameter->setCommandArguments($command->getArguments());
@@ -230,5 +234,10 @@ class Application
         $this->parameter->checkCommandOptions();
 
         $command->run();
+    }
+
+    protected function prepareCommand(Command $command): void
+    {
+        $command->prepare($this, $this->output, $this->input, $this->parameter);
     }
 }

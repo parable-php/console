@@ -64,6 +64,11 @@ class Command
         $this->parameter = $parameter;
     }
 
+    public function isPrepared(): bool
+    {
+        return $this->application && $this->output && $this->input && $this->parameter;
+    }
+
     public function setName(string $name): void
     {
         $this->name = $name;

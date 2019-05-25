@@ -169,41 +169,4 @@ class CommandTest extends AbstractTestClass
         self::assertSame('calling-command', $command->getName());
         self::assertSame('Command returned: OK', ValueClass::get());
     }
-
-    public function testGetUsageWithNothingSetIsEmptyString(): void
-    {
-        $command = $this->createNewCommand();
-        self::assertEmpty($command->getUsage());
-    }
-
-    public function testGetUsageWithEveryCombination(): void
-    {
-        $command = $this->createNewCommand("test-command");
-        $command->addOption("opt1", Parameter::OPTION_VALUE_OPTIONAL);
-        $command->addOption("opt2", Parameter::OPTION_VALUE_REQUIRED);
-        $command->addArgument("arg1", Parameter::PARAMETER_REQUIRED);
-        $command->addArgument("arg2", Parameter::PARAMETER_OPTIONAL);
-
-        self::assertSame(
-            "test-command arg1 [arg2] [--opt1[=value]] [--opt2=value]",
-            $command->getUsage()
-        );
-    }
-
-    protected function createNewCommand(string $name = null): Command
-    {
-        $command = new Command();
-        $command->prepare(
-            $this->container->build(Application::class),
-            $this->container->build(Output::class),
-            $this->container->build(Input::class),
-            $this->container->build(Parameter::class)
-        );
-
-        if ($name !== null) {
-            $command->setName($name);
-        }
-
-        return $command;
-    }
 }

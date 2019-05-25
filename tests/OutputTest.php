@@ -4,6 +4,7 @@ namespace Parable\Console\Tests;
 
 use Parable\Console\Environment;
 use Parable\Console\Output;
+use Parable\Console\Tags;
 
 class OutputTest extends AbstractTestClass
 {
@@ -21,23 +22,25 @@ class OutputTest extends AbstractTestClass
         parent::setUp();
 
         // We mock out parseTags, because it adds too many escape codes. We'll test parseTags concretely later.
-        $this->output = $this->createPartialMock(Output::class, ['parseTags', 'isInteractiveShell']);
-        $this->output->__construct(...$this->container->getDependenciesFor(Output::class));
-
-        $this->environment = $this->container->get(Environment::class);
-
-        $this->output
-            ->method('parseTags')
+        $tags = $this->createPartialMock(Tags::class, ['parse']);
+        $tags->method('parse')
             ->withAnyParameters()
             ->willReturnCallback(function ($string) {
                 return $string . $this->defaultTag;
             });
+
+        $this->container->store($tags, Tags::class);
+
+        $this->output = $this->createPartialMock(Output::class, ['isInteractiveShell']);
+        $this->output->__construct(...$this->container->getDependenciesFor(Output::class));
 
         // Make sure Output always thinks it's not in an interactive shell
         $this->output
             ->method('isInteractiveShell')
             ->withAnyParameters()
             ->willReturn(false);
+
+        $this->environment = $this->container->get(Environment::class);
     }
 
     public function testWrite(): void
@@ -290,38 +293,6 @@ class OutputTest extends AbstractTestClass
             implode("\n", $output),
             $this->getActualOutputAndClean()
         );
-    }
-
-    public function testParseTagsForRealThisTime(): void
-    {
-        $output = $this->container->build(Output::class);
-
-        // Since tags are escaped with the defaultTag at the end, we'll need 2
-        self::assertSame($this->addTag("\e[;32mgreen", 2), $output->parseTags('<green>green</green>'));
-        self::assertSame($this->addTag("\e[;31mred", 2), $output->parseTags('<red>red</red>'));
-
-        // And a more complex one, with both a fore- and a background color
-        // Since tags are escaped with the defaultTag at the end and there's two tags, we'll need 3
-        self::assertSame(
-            $this->addTag("\e[;31m\e[47mred on lightgray", 3),
-            $output->parseTags('<red><bg_light_gray>red on lightgray</bg_light_gray></red>')
-        );
-    }
-
-    public function testTagSetWorks(): void
-    {
-        $output = $this->container->build(Output::class);
-
-        self::assertSame(
-            $this->addTag("\e[;97m\e[41mthis is an error tag set", 2),
-            $output->parseTags('<error>this is an error tag set</error>')
-        );
-    }
-
-    public function testUnknownTags(): void
-    {
-        $output = $this->container->build(Output::class);
-        self::assertSame($this->addTag('<tag>unknown</tag>'), $output->parseTags('<tag>unknown</tag>'));
     }
 
     protected function assertSameWithTag(string $expected, string $actual): void

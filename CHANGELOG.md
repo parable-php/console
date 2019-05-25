@@ -1,5 +1,13 @@
 # Parable Console
 
+## 0.4.0
+
+_Changes_
+
+- It is now possible to add commands lazily, by calling `Application::addCommandByNameAndClass(string $commandName, string $className)`. When the command is requested (through `getCommand()` or `getCommands()`), it will be instantiated automatically.
+- `Command::getUsage()` has been replaced with `Application::getCommandUsage($command)`.
+- `Tags` class added, which is the only class that actually deals with tags.
+
 ## 0.3.1
 
 _Bugfixes_

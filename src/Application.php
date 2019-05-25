@@ -2,6 +2,7 @@
 
 namespace Parable\Console;
 
+use Parable\Di\Container;
 use Throwable;
 
 class Application
@@ -22,12 +23,17 @@ class Application
     protected $parameter;
 
     /**
+     * @var Container
+     */
+    protected $container;
+
+    /**
      * @var string|null
      */
     protected $name;
 
     /**
-     * @var Command[]
+     * @var Command[]|string[]
      */
     protected $commands = [];
 
@@ -49,17 +55,19 @@ class Application
     public function __construct(
         Output $output,
         Input $input,
-        Parameter $parameter
+        Parameter $parameter,
+        Container $container
     ) {
         $this->output    = $output;
         $this->input     = $input;
         $this->parameter = $parameter;
+        $this->container = $container;
 
         set_exception_handler(function (Throwable $e): void {
             $this->output->writeErrorBlock([$e->getMessage()]);
 
             if ($this->activeCommand) {
-                $this->output->writeln('<yellow>Usage</yellow>: ' . $this->activeCommand->getUsage());
+                $this->output->writeln('<yellow>Usage</yellow>: ' . $this->getCommandUsage($this->activeCommand));
             }
         });
     }
@@ -78,6 +86,11 @@ class Application
     {
         $command->prepare($this, $this->output, $this->input, $this->parameter);
         $this->commands[$command->getName()] = $command;
+    }
+
+    public function addCommandByNameAndClass(string $commandName, string $className): void
+    {
+        $this->commands[$commandName] = $className;
     }
 
     /**
@@ -118,11 +131,15 @@ class Application
 
     public function getCommand(string $commandName): ?Command
     {
-        if ($this->hasCommand($commandName)) {
-            return $this->commands[$commandName];
+        if (!$this->hasCommand($commandName)) {
+            return null;
         }
 
-        return null;
+        if (is_string($this->commands[$commandName])) {
+            $this->commands[$commandName] = $this->container->get($this->commands[$commandName]);
+        }
+
+        return $this->commands[$commandName];
     }
 
     /**
@@ -130,7 +147,13 @@ class Application
      */
     public function getCommands(): array
     {
-        return $this->commands;
+        $commands = [];
+
+        foreach ($this->commands as $commandName => $command) {
+            $commands[$commandName] = $this->getCommand($commandName);
+        }
+
+        return array_filter($commands);
     }
 
     public function removeCommandByName(string $commandName): void
@@ -138,6 +161,36 @@ class Application
         if ($this->hasCommand($commandName)) {
             unset($this->commands[$commandName]);
         }
+    }
+
+    public function getCommandUsage(Command $command): string
+    {
+        $string = [];
+
+        $string[] = $command->getName();
+
+        foreach ($command->getArguments() as $argument) {
+            if ($argument->isRequired()) {
+                $string[] = $argument->getName();
+            } else {
+                $string[] = "[{$argument->getName()}]";
+            }
+        }
+
+        foreach ($command->getOptions() as $option) {
+            $dashes = '-';
+            if (!$option->isFlagOption()) {
+                $dashes .= '-';
+            }
+            if ($option->isValueRequired()) {
+                $optionString = "{$option->getName()}=value";
+            } else {
+                $optionString = "{$option->getName()}[=value]";
+            }
+            $string[] = "[{$dashes}{$optionString}]";
+        }
+
+        return implode(' ', $string);
     }
 
     public function run(): void

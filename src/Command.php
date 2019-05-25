@@ -132,36 +132,6 @@ class Command
         return $this->arguments;
     }
 
-    public function getUsage(): string
-    {
-        $string = [];
-
-        $string[] = $this->getName();
-
-        foreach ($this->getArguments() as $argument) {
-            if ($argument->isRequired()) {
-                $string[] = $argument->getName();
-            } else {
-                $string[] = "[{$argument->getName()}]";
-            }
-        }
-
-        foreach ($this->getOptions() as $option) {
-            $dashes = '-';
-            if (!$option->isFlagOption()) {
-                $dashes .= '-';
-            }
-            if ($option->isValueRequired()) {
-                $optionString = "{$option->getName()}=value";
-            } else {
-                $optionString = "{$option->getName()}[=value]";
-            }
-            $string[] = "[{$dashes}{$optionString}]";
-        }
-
-        return implode(' ', $string);
-    }
-
     public function run(): void
     {
         $callable = $this->getCallable();

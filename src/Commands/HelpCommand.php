@@ -78,6 +78,6 @@ class HelpCommand extends Command
         }
 
         $this->output->writeln("<yellow>Usage:</yellow>");
-        $this->output->writeln("  {$command->getUsage()}");
+        $this->output->writeln("  {$this->application->getCommandUsage($command)}");
     }
 }

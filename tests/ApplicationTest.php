@@ -4,10 +4,12 @@ namespace Parable\Console\Tests;
 
 use Parable\Console\Application;
 use Parable\Console\Command;
+use Parable\Console\Commands\HelpCommand;
 use Parable\Console\Exception;
 use Parable\Console\Input;
 use Parable\Console\Output;
 use Parable\Console\Parameter;
+use Parable\Console\Tests\Classes\TestCommand;
 use Parable\Console\Tests\Classes\ValueClass;
 
 class ApplicationTest extends AbstractTestClass
@@ -93,13 +95,13 @@ class ApplicationTest extends AbstractTestClass
         self::assertCount(2, $application->getCommands());
     }
 
-    public function testAppSetGetName(): void
+    public function testSetGetName(): void
     {
         $this->application->setName('Super-application');
         self::assertSame('Super-application', $this->application->getName());
     }
 
-    public function testAppAddGetCommand(): void
+    public function testAddGetCommand(): void
     {
         $commandGot = $this->application->getCommand('test1');
 
@@ -114,6 +116,23 @@ class ApplicationTest extends AbstractTestClass
 
         self::assertSame('test2', $commandGot->getName());
         self::assertSame('OK2', ValueClass::get());
+    }
+
+    public function testAddCommandByClassName(): void
+    {
+        self::assertFalse($this->container->has(HelpCommand::class));
+
+        $this->application->addCommandByNameAndClass('test-command', TestCommand::class);
+
+        // Since we added it by name and class, it's not yet instanced or cached
+        self::assertFalse($this->container->has(HelpCommand::class));
+
+        $helpCommand = $this->application->getCommand('test-command');
+
+        self::assertSame('test-command', $helpCommand->getName());
+
+        // Now that we've requested it, it is instanced & cached
+        self::assertTrue($this->container->has(TestCommand::class));
     }
 
     public function testHasCommand(): void
@@ -182,7 +201,8 @@ class ApplicationTest extends AbstractTestClass
         $application = new Application(
             $this->container->build(Output::class),
             $this->container->build(Input::class),
-            $this->parameter
+            $this->parameter,
+            $this->container
         );
 
         $application->addCommand($this->command1);
@@ -208,7 +228,8 @@ class ApplicationTest extends AbstractTestClass
         $application = new Application(
             $this->container->build(Output::class),
             $this->container->build(Input::class),
-            $this->parameter
+            $this->parameter,
+            $this->container
         );
 
         $application->addCommand($this->command1);
@@ -322,5 +343,42 @@ class ApplicationTest extends AbstractTestClass
 
         $application = $this->container->buildAll(Application::class);
         $application->run();
+    }
+
+    public function testGetUsageWithNothingSetIsEmptyString(): void
+    {
+        $command = $this->createNewCommand();
+        self::assertEmpty($this->application->getCommandUsage($command));
+    }
+
+    public function testGetUsageWithEveryCombination(): void
+    {
+        $command = $this->createNewCommand("test-command");
+        $command->addOption("opt1", Parameter::OPTION_VALUE_OPTIONAL);
+        $command->addOption("opt2", Parameter::OPTION_VALUE_REQUIRED);
+        $command->addArgument("arg1", Parameter::PARAMETER_REQUIRED);
+        $command->addArgument("arg2", Parameter::PARAMETER_OPTIONAL);
+
+        self::assertSame(
+            "test-command arg1 [arg2] [--opt1[=value]] [--opt2=value]",
+            $this->application->getCommandUsage($command)
+        );
+    }
+
+    protected function createNewCommand(string $name = null): Command
+    {
+        $command = new Command();
+        $command->prepare(
+            $this->container->build(Application::class),
+            $this->container->build(Output::class),
+            $this->container->build(Input::class),
+            $this->container->build(Parameter::class)
+        );
+
+        if ($name !== null) {
+            $command->setName($name);
+        }
+
+        return $command;
     }
 }

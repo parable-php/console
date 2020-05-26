@@ -220,7 +220,7 @@ class Parameter
      */
     public function getOption(string $name)
     {
-        if (!array_key_exists($name, $this->commandOptions)) {
+        if (!isset($this->commandOptions[$name])) {
             return null;
         }
 

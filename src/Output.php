@@ -176,15 +176,31 @@ class Output
 
         $outputLines = [
             "",
-            " {$tagsOpen}┌" . str_repeat("─", $strlen + 2) . "┐{$tagsClose}",
+            sprintf(
+                " %s┌%s┐%s",
+                $tagsOpen,
+                str_repeat("─", $strlen + 2),
+                $tagsClose
+            )
         ];
 
         foreach ($actualLines as $line) {
             $padding = str_repeat(" ", $strlen - mb_strlen($line));
-            $outputLines[] = " {$tagsOpen}│ {$line}{$padding} │{$tagsClose}";
+            $outputLines[] = sprintf(
+                " %s│ %s%s │%s",
+                $tagsOpen,
+                $line,
+                $padding,
+                $tagsClose
+            );
         }
 
-        $outputLines[] = " {$tagsOpen}└" . str_repeat("─", $strlen + 2) . "┘{$tagsClose}";
+        $outputLines[] = sprintf(
+            " %s└%s┘%s",
+            $tagsOpen,
+            str_repeat("─", $strlen + 2),
+            $tagsClose
+        );
         $outputLines[] = "";
 
         $this->writelns($outputLines);

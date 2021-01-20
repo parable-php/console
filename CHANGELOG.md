@@ -1,5 +1,10 @@
 # Parable Console
 
+## 0.5.0
+
+_Changes_
+- Dropped support for php7, php8 only from now on.
+
 ## 0.4.1
 
 _Bugfixes_

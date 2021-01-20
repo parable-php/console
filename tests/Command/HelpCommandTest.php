@@ -3,6 +3,7 @@
 namespace Parable\Console\Tests\Command;
 
 use Parable\Console\Application;
+use Parable\Console\Commands\HelpCommand;
 use Parable\Console\Input;
 use Parable\Console\Output;
 use Parable\Console\Parameter;
@@ -11,14 +12,9 @@ use Parable\Console\Tests\AbstractTestClass;
 
 class HelpCommandTest extends AbstractTestClass
 {
-    /** @var Application */
-    protected $application;
-
-    /** @var Parameter */
-    protected $parameter;
-
-    /** @var Commands\HelpCommand */
-    protected $helpCommand;
+    protected Application $application;
+    protected Parameter $parameter;
+    protected HelpCommand $helpCommand;
 
     protected function setUp(): void
     {
@@ -46,10 +42,10 @@ class HelpCommandTest extends AbstractTestClass
 
         $content = $this->getActualOutputAndClean();
 
-        self::assertContains("Help Test App", $content);
-        self::assertContains("Available commands:", $content);
-        self::assertContains("help", $content);
-        self::assertContains("Shows all commands available.", $content);
+        self::assertStringContainsString("Help Test App", $content);
+        self::assertStringContainsString("Available commands:", $content);
+        self::assertStringContainsString("help", $content);
+        self::assertStringContainsString("Shows all commands available.", $content);
     }
 
     public function testHelpOnSpecificCommandReturnsDescriptionAndUsage(): void
@@ -66,9 +62,9 @@ class HelpCommandTest extends AbstractTestClass
 
         $content = $this->getActualOutputAndClean();
 
-        self::assertContains("Help Test App", $content);
-        self::assertContains("Description:", $content);
-        self::assertContains("Usage:", $content);
+        self::assertStringContainsString("Help Test App", $content);
+        self::assertStringContainsString("Description:", $content);
+        self::assertStringContainsString("Usage:", $content);
     }
 
     public function testHelpOnUnknownCommandReturnsError(): void
@@ -85,7 +81,7 @@ class HelpCommandTest extends AbstractTestClass
 
         $content = $this->getActualOutputAndClean();
 
-        self::assertContains("Unknown command:", $content);
-        self::assertContains("what-is-this-i-cant-even", $content);
+        self::assertStringContainsString("Unknown command:", $content);
+        self::assertStringContainsString("what-is-this-i-cant-even", $content);
     }
 }

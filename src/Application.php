@@ -7,62 +7,18 @@ use Throwable;
 
 class Application
 {
-    /**
-     * @var Output
-     */
-    protected $output;
-
-    /**
-     * @var Input
-     */
-    protected $input;
-
-    /**
-     * @var Parameter
-     */
-    protected $parameter;
-
-    /**
-     * @var Container
-     */
-    protected $container;
-
-    /**
-     * @var string|null
-     */
-    protected $name;
-
-    /**
-     * @var Command[]|string[]
-     */
-    protected $commands = [];
-
-    /**
-     * @var Command|null
-     */
-    protected $activeCommand;
-
-    /**
-     * @var string|null
-     */
-    protected $defaultCommand;
-
-    /**
-     * @var bool
-     */
-    protected $onlyUseDefaultCommand = false;
+    protected ?string $name = null;
+    protected array $commands = [];
+    protected ?Command $activeCommand;
+    protected ?string $defaultCommand = null;
+    protected bool $onlyUseDefaultCommand = false;
 
     public function __construct(
-        Output $output,
-        Input $input,
-        Parameter $parameter,
-        Container $container
+        protected Output $output,
+        protected Input $input,
+        protected Parameter $parameter,
+        protected Container $container
     ) {
-        $this->output    = $output;
-        $this->input     = $input;
-        $this->parameter = $parameter;
-        $this->container = $container;
-
         set_exception_handler(function (Throwable $e): void {
             $this->output->writeErrorBlock([$e->getMessage()]);
 

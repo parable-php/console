@@ -6,14 +6,7 @@ use Parable\Console\Tags;
 
 class TagsTest extends AbstractTestClass
 {
-
-    /** @var string */
-    protected $defaultTag = "\e[0m";
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-    }
+    protected string $defaultTag = "\e[0m";
 
     public function testParseTags(): void
     {
@@ -52,13 +45,13 @@ class TagsTest extends AbstractTestClass
     {
         $defaultTag = str_repeat($this->defaultTag, $amount);
 
-        if (strpos($value, "\n") !== false) {
+        if (str_contains($value, "\n")) {
             // If there's new lines, the default tag is placed just before the newline.
             // At the end of the string, there won't be another default tag.
             $value = str_replace("\n", "{$defaultTag}\n", $value);
         } else {
             // If this is just a line with no newline, there will be a default tag at the end
-            $value = $value . $defaultTag;
+            $value .= $defaultTag;
         }
 
         return $value;

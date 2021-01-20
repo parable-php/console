@@ -6,8 +6,7 @@ use Parable\Console\Environment;
 
 class EnvironmentTest extends AbstractTestClass
 {
-    /** @var Environment */
-    protected $environment;
+    protected Environment $environment;
 
     protected function setUp(): void
     {

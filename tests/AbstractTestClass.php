@@ -7,8 +7,7 @@ use PHPUnit\Framework\TestCase;
 
 class AbstractTestClass extends TestCase
 {
-    /** @var Container */
-    protected $container;
+    protected Container $container;
 
     protected function setUp(): void
     {
@@ -27,7 +26,7 @@ class AbstractTestClass extends TestCase
      */
     public function getActualOutputAndClean(): string
     {
-        $content = parent::getActualOutput();
+        $content = $this->getActualOutput();
         ob_clean();
         return $content;
     }

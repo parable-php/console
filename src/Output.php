@@ -4,27 +4,12 @@ namespace Parable\Console;
 
 class Output
 {
-    /**
-     * @var Environment
-     */
-    protected $environment;
-
-    /**
-     * @var Tags
-     */
-    protected $tags;
-
-    /**
-     * @var bool
-     */
-    protected $clearLineEnabled = false;
+    protected bool $clearLineEnabled = false;
 
     public function __construct(
-        Environment $environment,
-        Tags $tags
+        protected Environment $environment,
+        protected Tags $tags
     ) {
-        $this->environment = $environment;
-        $this->tags = $tags;
     }
 
     public function write(string $string): void
@@ -61,7 +46,7 @@ class Output
         $this->write("\e[{$characters}C");
     }
 
-    public function cursorBackward(int $characters = 1)
+    public function cursorBackward(int $characters = 1): void
     {
         $this->write("\e[{$characters}D");
     }

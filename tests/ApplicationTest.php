@@ -4,7 +4,6 @@ namespace Parable\Console\Tests;
 
 use Parable\Console\Application;
 use Parable\Console\Command;
-use Parable\Console\Commands\HelpCommand;
 use Parable\Console\Exception;
 use Parable\Console\Input;
 use Parable\Console\Output;
@@ -14,30 +13,11 @@ use Parable\Console\Tests\Classes\ValueClass;
 
 class ApplicationTest extends AbstractTestClass
 {
-    /**
-     * @var Parameter
-     */
-    protected $parameter;
-
-    /**
-     * @var Application
-     */
-    protected $application;
-
-    /**
-     * @var Command
-     */
-    protected $command1;
-
-    /**
-     * @var Command
-     */
-    protected $command2;
-
-    /**
-     * @var Command
-     */
-    protected $commandReturnOptionValue;
+    protected Parameter $parameter;
+    protected Application $application;
+    protected Command $command1;
+    protected Command $command2;
+    protected Command $commandReturnOptionValue;
 
     protected function setUp(): void
     {
@@ -51,7 +31,7 @@ class ApplicationTest extends AbstractTestClass
         $this->command1 = new Command();
         $this->command1->setName('test1');
         $this->command1->addArgument("arg1");
-        $this->command1->setCallable(function () {
+        $this->command1->setCallable(static function () {
             ValueClass::set('OK1');
         });
         $this->application->addCommand($this->command1);
@@ -59,7 +39,7 @@ class ApplicationTest extends AbstractTestClass
         $this->command2 = new Command();
         $this->command2->setName('test2');
         $this->command1->addArgument("arg1");
-        $this->command2->setCallable(function () {
+        $this->command2->setCallable(static function () {
             ValueClass::set('OK2');
         });
         $this->application->addCommand($this->command2);
@@ -68,7 +48,7 @@ class ApplicationTest extends AbstractTestClass
 
         $this->commandReturnOptionValue = new Command();
         $this->commandReturnOptionValue->setName('returnOptionValue');
-        $this->commandReturnOptionValue->setCallable(function (
+        $this->commandReturnOptionValue->setCallable(static function (
             Application $application,
             Output $output,
             Input $input,
@@ -267,11 +247,10 @@ class ApplicationTest extends AbstractTestClass
 
     /**
      * @dataProvider dpTrueFalse
-     *
-     * @param $defaultCommandOnly
      */
-    public function testSetDefaultCommandWithCommandPassedRespectsDefaultOnlyCommand(bool $defaultCommandOnly)
-    {
+    public function testSetDefaultCommandWithCommandPassedRespectsDefaultOnlyCommand(
+        bool $defaultCommandOnly
+    ) {
         // Same as calling 'php test.php test2'
         $_SERVER["argv"] = ['./test.php', 'test2'];
 

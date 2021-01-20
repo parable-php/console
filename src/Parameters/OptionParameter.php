@@ -7,20 +7,13 @@ use Parable\Console\Parameter;
 
 class OptionParameter extends AbstractParameter
 {
-    /**
-     * @var int
-     */
-    protected $valueType;
-
-    /**
-     * @var bool
-     */
-    protected $flagOption = false;
+    protected int $valueType;
+    protected bool $flagOption = false;
 
     public function __construct(
         string $name,
         int $valueType = Parameter::OPTION_VALUE_OPTIONAL,
-        $defaultValue = null,
+        mixed $defaultValue = null,
         bool $flagOption = false
     ) {
         $this->setName($name);
@@ -36,7 +29,8 @@ class OptionParameter extends AbstractParameter
             [
                 Parameter::OPTION_VALUE_REQUIRED,
                 Parameter::OPTION_VALUE_OPTIONAL,
-            ]
+            ],
+            true
         )) {
             throw Exception::fromMessage('Value type must be one of the OPTION_* constants.');
         }

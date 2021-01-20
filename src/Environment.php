@@ -32,7 +32,7 @@ class Environment
 
     public function isWindows(): bool
     {
-        return strtoupper(substr(PHP_OS, 0, 3)) === 'WIN';
+        return stripos(PHP_OS_FAMILY, 'Windows') === 0;
     }
 
     public function isInteractiveShell(): bool

@@ -6,6 +6,8 @@ use Parable\Console\Command;
 
 class TestCommand extends Command
 {
-    protected $name = 'test-command';
-    protected $description = 'This command does nothing';
+    public function __construct() {
+        $this->setName('test-command');
+        $this->setDescription('This is a test command.');
+    }
 }

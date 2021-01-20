@@ -7,56 +7,27 @@ use Parable\Console\Parameters\OptionParameter;
 
 class Parameter
 {
-    const PARAMETER_REQUIRED = 1;
-    const PARAMETER_OPTIONAL = 2;
+    public const PARAMETER_REQUIRED = 1;
+    public const PARAMETER_OPTIONAL = 2;
 
-    const OPTION_VALUE_REQUIRED = 11;
-    const OPTION_VALUE_OPTIONAL = 12;
+    public const OPTION_VALUE_REQUIRED = 11;
+    public const OPTION_VALUE_OPTIONAL = 12;
 
-    /**
-     * @var string[]
-     */
-    protected $parameters = [];
+    /** @var string[] */
+    protected array $parameters = [];
+    protected ?string $scriptName;
+    protected ?string $commandName;
+    protected array $options = [];
+    protected array $flagOptions = [];
+    protected array $arguments = [];
 
-    /**
-     * @var string
-     */
-    protected $scriptName;
+    /** @var OptionParameter[] */
+    protected array $commandOptions = [];
 
-    /**
-     * @var string|null
-     */
-    protected $commandName;
+    /** @var ArgumentParameter[] */
+    protected array $commandArguments = [];
 
-    /**
-     * @var array
-     */
-    protected $options = [];
-
-    /**
-     * @var array
-     */
-    protected $flagOptions = [];
-
-    /**
-     * @var array
-     */
-    protected $arguments = [];
-
-    /**
-     * @var OptionParameter[]
-     */
-    protected $commandOptions = [];
-
-    /**
-     * @var ArgumentParameter[]
-     */
-    protected $commandArguments = [];
-
-    /**
-     * @var bool
-     */
-    protected $commandNameEnabled = true;
+    protected bool $commandNameEnabled = true;
 
     public function __construct()
     {
@@ -72,9 +43,6 @@ class Parameter
         $this->parseParameters();
     }
 
-    /**
-     * @return string[]
-     */
     public function getParameters(): array
     {
         return $this->parameters;
@@ -103,9 +71,9 @@ class Parameter
         foreach ($this->parameters as $parameter) {
             $optionString = ltrim($parameter, '-');
 
-            if (substr($parameter, 0, 2) === "--") {
+            if (str_starts_with($parameter, "--")) {
                 $this->parseOption($optionString);
-            } elseif (substr($parameter, 0, 1) === "-") {
+            } elseif (str_starts_with($parameter, "-")) {
                 $this->parseFlagOption($optionString);
             } else {
                 $this->parseArgument($parameter);
@@ -118,7 +86,7 @@ class Parameter
         $optionParts = explode('=', $optionString);
 
         if (count($optionParts) > 1) {
-            list($key, $value) = $optionParts;
+            [$key, $value] = $optionParts;
         } else {
             $key = $optionString;
             $value = true;
@@ -133,8 +101,8 @@ class Parameter
      */
     protected function parseFlagOption(string $optionString): void
     {
-        for ($i = 0; $i < strlen($optionString); $i++) {
-            $optionChar = substr($optionString, $i, 1);
+        for ($i = 0, $iMax = strlen($optionString); $i < $iMax; $i++) {
+            $optionChar = $optionString[$i];
             $optionParts = explode('=', substr($optionString, $i + 1));
 
             if (count($optionParts) > 1 && empty($optionParts[0])) {
@@ -162,7 +130,7 @@ class Parameter
         }
     }
 
-    public function getScriptName(): string
+    public function getScriptName(): ?string
     {
         return $this->scriptName;
     }
@@ -184,6 +152,7 @@ class Parameter
                     $name
                 );
             }
+
             $this->commandOptions[$option->getName()] = $option;
         }
     }
@@ -237,7 +206,9 @@ class Parameter
     {
         $returnArray = [];
         foreach ($this->commandOptions as $option) {
-            $returnArray[$option->getName()] = $this->getOption($option->getName());
+            $optionName = $option->getName();
+
+            $returnArray[$optionName] = $this->getOption($optionName);
         }
         return $returnArray;
     }

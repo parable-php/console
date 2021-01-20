@@ -8,14 +8,9 @@ use Parable\Console\Tags;
 
 class OutputTest extends AbstractTestClass
 {
-    /** @var Output|\PHPUnit_Framework_MockObject_MockObject */
-    protected $output;
-
-    /** @var Environment */
-    protected $environment;
-
-    /** @var string */
-    protected $defaultTag = "\e[0m";
+    protected Output $output;
+    protected Environment $environment;
+    protected string $defaultTag = "\e[0m";
 
     protected function setUp(): void
     {
@@ -31,15 +26,7 @@ class OutputTest extends AbstractTestClass
 
         $this->container->store($tags, Tags::class);
 
-        $this->output = $this->createPartialMock(Output::class, ['isInteractiveShell']);
-        $this->output->__construct(...$this->container->getDependenciesFor(Output::class));
-
-        // Make sure Output always thinks it's not in an interactive shell
-        $this->output
-            ->method('isInteractiveShell')
-            ->withAnyParameters()
-            ->willReturn(false);
-
+        $this->output = $this->container->get(Output::class);
         $this->environment = $this->container->get(Environment::class);
     }
 
@@ -48,7 +35,7 @@ class OutputTest extends AbstractTestClass
         $this->output->write('OK');
         $content = $this->getActualOutputAndClean();
 
-        self::assertSameWithTag("OK", $content);
+        $this->assertSameWithTag("OK", $content);
     }
 
     public function testWriteln(): void
@@ -56,7 +43,7 @@ class OutputTest extends AbstractTestClass
         $this->output->writeln('OK');
         $content = $this->getActualOutputAndClean();
 
-        self::assertSameWithTag("OK\n", $content);
+        $this->assertSameWithTag("OK\n", $content);
     }
 
     public function testWritelnWithArray(): void
@@ -67,7 +54,7 @@ class OutputTest extends AbstractTestClass
         ]);
         $content = $this->getActualOutputAndClean();
 
-        self::assertSameWithTag("line1\nline2\n", $content);
+        $this->assertSameWithTag("line1\nline2\n", $content);
     }
 
     public function testNewline(): void
@@ -84,31 +71,31 @@ class OutputTest extends AbstractTestClass
     public function testCursorForward(): void
     {
         $this->output->cursorForward(1);
-        self::assertSameWithTag("\e[1C", $this->getActualOutputAndClean());
+        $this->assertSameWithTag("\e[1C", $this->getActualOutputAndClean());
     }
 
     public function testCursorBackward(): void
     {
         $this->output->cursorBackward(1);
-        self::assertSameWithTag("\e[1D", $this->getActualOutputAndClean());
+        $this->assertSameWithTag("\e[1D", $this->getActualOutputAndClean());
     }
 
     public function testCursorUp(): void
     {
         $this->output->cursorUp(1);
-        self::assertSameWithTag("\e[1A", $this->getActualOutputAndClean());
+        $this->assertSameWithTag("\e[1A", $this->getActualOutputAndClean());
     }
 
     public function testCursorDown(): void
     {
         $this->output->cursorDown(1);
-        self::assertSameWithTag("\e[1B", $this->getActualOutputAndClean());
+        $this->assertSameWithTag("\e[1B", $this->getActualOutputAndClean());
     }
 
     public function testCursorPlace(): void
     {
         $this->output->cursorPlace(4, 8);
-        self::assertSameWithTag("\e[4;8H", $this->getActualOutputAndClean());
+        $this->assertSameWithTag("\e[4;8H", $this->getActualOutputAndClean());
     }
 
     public function testCursorPlaceDisablesClearLine(): void
@@ -129,7 +116,7 @@ class OutputTest extends AbstractTestClass
     public function testCls(): void
     {
         $this->output->cls();
-        self::assertSameWithTag("\ec", $this->getActualOutputAndClean());
+        $this->assertSameWithTag("\ec", $this->getActualOutputAndClean());
     }
 
     public function testClearLine(): void
@@ -311,7 +298,7 @@ class OutputTest extends AbstractTestClass
             $value = str_replace("\n", "{$defaultTag}\n", $value);
         } else {
             // If this is just a line with no newline, there will be a default tag at the end
-            $value = $value . $defaultTag;
+            $value .= $defaultTag;
         }
 
         return $value;

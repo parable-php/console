@@ -9,8 +9,7 @@ use Parable\Console\Parameters\OptionParameter;
 
 class ParameterTest extends AbstractTestClass
 {
-    /** @var Parameter */
-    protected $parameter;
+    protected Parameter $parameter;
 
     protected function setUp(): void
     {
@@ -366,7 +365,7 @@ class ParameterTest extends AbstractTestClass
      * @param mixed  $default   Option default
      * @param mixed  $expected  Expected result
      */
-    public function testGetOptionReturnsExpected($parameter, $default, $expected)
+    public function testGetOptionReturnsExpected($parameter, $default, $expected): void
     {
         $parameters = [
             './test.php',

@@ -4,25 +4,10 @@ namespace Parable\Console\Parameters;
 
 abstract class AbstractParameter
 {
-    /**
-     * @var string|null
-     */
-    protected $name;
-
-    /**
-     * @var mixed|null
-     */
-    protected $defaultValue;
-
-    /**
-     * @var bool
-     */
-    protected $hasBeenProvided = false;
-
-    /**
-     * @var string|null
-     */
-    protected $providedValue;
+    protected ?string $name;
+    protected mixed $defaultValue;
+    protected bool $hasBeenProvided = false;
+    protected ?string $providedValue = null;
 
     public function setName(string $name): void
     {
@@ -34,12 +19,12 @@ abstract class AbstractParameter
         return $this->name;
     }
 
-    public function setDefaultValue($defaultValue): void
+    public function setDefaultValue(mixed $defaultValue): void
     {
         $this->defaultValue = $defaultValue;
     }
 
-    public function getDefaultValue()
+    public function getDefaultValue(): mixed
     {
         return $this->defaultValue;
     }
@@ -64,7 +49,7 @@ abstract class AbstractParameter
         return $this->providedValue;
     }
 
-    public function getValue()
+    public function getValue(): mixed
     {
         if ($this->getProvidedValue() !== null) {
             return $this->getProvidedValue();

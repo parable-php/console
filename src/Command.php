@@ -7,50 +7,21 @@ use Parable\Console\Parameters\OptionParameter;
 
 class Command
 {
-    /**
-     * @var Application
-     */
-    protected $application;
+    protected ?Application $application = null;
+    protected ?Output $output = null;
+    protected ?Input $input = null;
+    protected ?Parameter $parameter = null;
+    protected ?string $name = null;
+    protected ?string $description = null;
 
-    /**
-     * @var Output
-     */
-    protected $output;
-
-    /**
-     * @var Input
-     */
-    protected $input;
-
-    /**
-     * @var Parameter
-     */
-    protected $parameter;
-
-    /**
-     * @var string|null
-     */
-    protected $name;
-
-    /**
-     * @var string|null
-     */
-    protected $description;
-
-    /**
-     * @var callable|null
-     */
+    /** @var callable|null */
     protected $callable;
 
-    /**
-     * @var OptionParameter[]
-     */
-    protected $options = [];
+    /** @var OptionParameter[] */
+    protected array $options = [];
 
-    /**
-     * @var ArgumentParameter[]
-     */
-    protected $arguments = [];
+    /** @var ArgumentParameter[] */
+    protected array $arguments = [];
 
     public function prepare(
         Application $application,
@@ -102,7 +73,7 @@ class Command
     public function addOption(
         string $name,
         int $valueRequired = Parameter::OPTION_VALUE_OPTIONAL,
-        $defaultValue = null,
+        mixed $defaultValue = null,
         bool $flagOption = false
     ): void {
         $this->options[$name] = new OptionParameter(
@@ -124,7 +95,7 @@ class Command
     public function addArgument(
         string $name,
         int $required = Parameter::PARAMETER_OPTIONAL,
-        $defaultValue = null
+        mixed $defaultValue = null
     ): void {
         $this->arguments[] = new ArgumentParameter($name, $required, $defaultValue);
     }

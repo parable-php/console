@@ -6,10 +6,8 @@ use Throwable;
 
 class Tags
 {
-    /**
-     * @var string[]
-     */
-    protected $predefinedTags = [
+    /** @var string[] */
+    protected array $predefinedTags = [
         'default' => "\e[0m",
         'black' => "\e[;30m",
         'red' => "\e[;31m",
@@ -46,10 +44,8 @@ class Tags
         'bg_white' => "\e[107m",
     ];
 
-    /**
-     * @var string[][]
-     */
-    protected $tagSets = [
+    /** @var string[][] */
+    protected array $tagSets = [
         'error' => ['white', 'bg_red'],
         'success' => ['black', 'bg_green'],
         'info' => ['black', 'bg_yellow'],
@@ -62,7 +58,7 @@ class Tags
         foreach ($tags as $tag) {
             try {
                 $code = $this->getCodeFor($tag);
-            } catch (Throwable $throwable) {
+            } catch (Throwable) {
                 continue;
             }
 
@@ -89,18 +85,20 @@ class Tags
     {
         try {
             return $this->getCodeForPredefined($tag);
-        } catch (Throwable $throwable) {
+        } catch (Throwable) {
         }
 
         try {
             $tags = $this->getTagsForSet($tag);
 
             $codes = '';
-            foreach ($tags as $tag) {
-                $codes .= $this->getCodeForPredefined($tag);
+
+            foreach ($tags as $tagFound) {
+                $codes .= $this->getCodeForPredefined($tagFound);
             }
+
             return $codes;
-        } catch (Throwable $throwable) {
+        } catch (Throwable) {
         }
 
         throw Exception::fromMessage('No predefined or tag set found for <%s>.', $tag);

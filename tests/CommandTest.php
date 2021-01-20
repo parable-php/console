@@ -13,12 +13,7 @@ use Parable\Console\Tests\Classes\ValueClass;
 
 class CommandTest extends AbstractTestClass
 {
-    /**
-     * @var Command
-     */
-    protected $command;
-
-    protected $value;
+    protected Command $command;
 
     protected function setUp(): void
     {
@@ -43,7 +38,7 @@ class CommandTest extends AbstractTestClass
 
     public function testSetGetCallableAndRunCommand(): void
     {
-        $callable = function () {
+        $callable = static function () {
             ValueClass::set('Yo!');
         };
         $this->command->setCallable($callable);
@@ -79,13 +74,12 @@ class CommandTest extends AbstractTestClass
 
         $arguments = $this->command->getArguments();
 
-        $argument1 = $arguments[0];
-        $argument2 = $arguments[1];
+        [$argument1, $argument2] = $arguments;
 
         self::assertInstanceOf(ArgumentParameter::class, $argument1);
         self::assertSame("arg1", $argument1->getName());
         self::assertTrue($argument1->isRequired());
-        self::assertSame(null, $argument1->getDefaultValue());
+        self::assertNull($argument1->getDefaultValue());
 
         self::assertInstanceOf(ArgumentParameter::class, $argument2);
         self::assertSame("arg2", $argument2->getName());
@@ -101,25 +95,28 @@ class CommandTest extends AbstractTestClass
             $this->container->build(Input::class),
             $this->container->build(Parameter::class)
         );
-        $this->command->setCallable(function ($application, $output, $input, $parameter) {
+        $this->command->setCallable(static function ($application, $output, $input, $parameter) {
             ValueClass::set([$application, $output, $input, $parameter]);
         });
 
         $this->command->run();
 
-        $instances = ValueClass::get();
+        [$application, $output, $input, $parameter] = ValueClass::get();
 
-        self::assertInstanceOf(Application::class, $instances[0]);
-        self::assertInstanceOf(Output::class, $instances[1]);
-        self::assertInstanceOf(Input::class, $instances[2]);
-        self::assertInstanceOf(Parameter::class, $instances[3]);
+        self::assertInstanceOf(Application::class, $application);
+        self::assertInstanceOf(Output::class, $output);
+        self::assertInstanceOf(Input::class, $input);
+        self::assertInstanceOf(Parameter::class, $parameter);
     }
 
     public function testExtendingCommandClassWorks(): void
     {
         $command = new class extends Command {
-            protected $name = 'testcommand';
-            protected $description = 'This is a test command.';
+            public function __construct() {
+                $this->setName('testcommand');
+                $this->setDescription('This is a test command.');
+            }
+
             public function run(): void
             {
                 ValueClass::set('OK');
@@ -138,13 +135,19 @@ class CommandTest extends AbstractTestClass
     public function testCommandCanCallOtherCommand(): void
     {
         $command = new class extends Command {
-            protected $name = 'calling-command';
-            protected $description = 'This is a test command.';
+            public function __construct() {
+                $this->setName('calling-command');
+                $this->setDescription('This is a test command.');
+            }
+
             public function run(): void
             {
                 $command2 = new class extends Command {
-                    protected $name = 'testcommand';
-                    protected $description = 'This is a test command.';
+                    public function __construct() {
+                        $this->setName('testcommand');
+                        $this->setDescription('This is a test command.');
+                    }
+
                     public function run(): void
                     {
                         ValueClass::set('OK');

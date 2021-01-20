@@ -7,20 +7,13 @@ use Parable\Console\Parameter;
 
 class ArgumentParameter extends AbstractParameter
 {
-    /**
-     * @var int
-     */
-    protected $required;
-
-    /**
-     * @var int|null
-     */
-    protected $order;
+    protected int $required;
+    protected ?int $order;
 
     public function __construct(
         string $name,
         int $required = Parameter::PARAMETER_OPTIONAL,
-        $defaultValue = null
+        mixed $defaultValue = null
     ) {
         $this->setName($name);
         $this->setRequired($required);
@@ -34,7 +27,8 @@ class ArgumentParameter extends AbstractParameter
             [
                 Parameter::PARAMETER_REQUIRED,
                 Parameter::PARAMETER_OPTIONAL,
-            ]
+            ],
+            true
         )) {
             throw Exception::fromMessage('Required must be one of the PARAMETER_* constants.');
         }

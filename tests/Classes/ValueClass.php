@@ -4,14 +4,14 @@ namespace Parable\Console\Tests\Classes;
 
 class ValueClass
 {
-    protected static $value;
+    protected static mixed $value;
 
-    public static function set($value): void
+    public static function set(mixed $value): void
     {
         self::$value = $value;
     }
 
-    public static function get()
+    public static function get(): mixed
     {
         return self::$value;
     }

@@ -1,5 +1,10 @@
 # Parable Console
 
+## 0.5.1
+
+_Changes_
+- Update parable-php/di dependency to 0.3.0
+
 ## 0.5.0
 
 _Changes_

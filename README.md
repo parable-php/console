@@ -1,6 +1,6 @@
 # Parable Console
 
-[![Build Status](https://travis-ci.com/parable-php/console.svg?branch=master)](https://travis-ci.com/parable-php/console)
+[![Workflow Status](https://github.com/parable-php/console/workflows/Tests/badge.svg)](https://github.com/parable-php/console/actions?query=workflow%3ATests)
 [![Latest Stable Version](https://poser.pugx.org/parable-php/console/v/stable)](https://packagist.org/packages/parable-php/console)
 [![Latest Unstable Version](https://poser.pugx.org/parable-php/console/v/unstable)](https://packagist.org/packages/parable-php/console)
 [![License](https://poser.pugx.org/parable-php/console/license)](https://packagist.org/packages/parable-php/console)

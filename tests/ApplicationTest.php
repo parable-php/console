@@ -4,7 +4,7 @@ namespace Parable\Console\Tests;
 
 use Parable\Console\Application;
 use Parable\Console\Command;
-use Parable\Console\Exception;
+use Parable\Console\ConsoleException;
 use Parable\Console\Input;
 use Parable\Console\Output;
 use Parable\Console\Parameter;
@@ -294,7 +294,7 @@ class ApplicationTest extends AbstractTestClass
 
         $application->setDefaultCommand($this->command1);
 
-        $this->expectException(Exception::class);
+        $this->expectException(ConsoleException::class);
         $this->expectExceptionMessage("Option '--option' requires a value, which is not provided.");
 
         $application->run();
@@ -339,7 +339,7 @@ class ApplicationTest extends AbstractTestClass
     public function testThrowsExceptionWhenRanWithoutCommand(): void
     {
         $this->expectExceptionMessage("No valid commands found.");
-        $this->expectException(Exception::class);
+        $this->expectException(ConsoleException::class);
 
         $application = $this->container->buildAll(Application::class);
         $application->run();

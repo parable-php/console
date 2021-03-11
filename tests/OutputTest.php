@@ -46,12 +46,12 @@ class OutputTest extends AbstractTestClass
         $this->assertSameWithTag("OK\n", $content);
     }
 
-    public function testWritelnWithArray(): void
+    public function testWritelnWithMultipleLines(): void
     {
-        $this->output->writelns([
+        $this->output->writelns(
             'line1',
             'line2'
-        ]);
+        );
         $content = $this->getActualOutputAndClean();
 
         $this->assertSameWithTag("line1\nline2\n", $content);

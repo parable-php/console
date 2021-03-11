@@ -2,7 +2,7 @@
 
 namespace Parable\Console\Parameters;
 
-use Parable\Console\Exception;
+use Parable\Console\ConsoleException;
 use Parable\Console\Parameter;
 
 class OptionParameter extends AbstractParameter
@@ -32,7 +32,7 @@ class OptionParameter extends AbstractParameter
             ],
             true
         )) {
-            throw Exception::fromMessage('Value type must be one of the OPTION_* constants.');
+            throw ConsoleException::fromMessage('Value type must be one of the OPTION_* constants.');
         }
 
         $this->valueType = $valueType;
@@ -46,8 +46,9 @@ class OptionParameter extends AbstractParameter
     public function setFlagOption(bool $enabled): void
     {
         if ($enabled && mb_strlen($this->getName()) > 1) {
-            throw Exception::fromMessage("Flag options can only have a single-letter name.");
+            throw ConsoleException::fromMessage("Flag options can only have a single-letter name.");
         }
+
         $this->flagOption = $enabled;
     }
 

@@ -2,7 +2,7 @@
 
 namespace Parable\Console;
 
-class Exception extends \Exception
+class ConsoleException extends \Exception
 {
     public static function fromMessage(string $message, ...$replacements): self
     {

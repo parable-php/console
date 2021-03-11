@@ -51,11 +51,7 @@ abstract class AbstractParameter
 
     public function getValue(): mixed
     {
-        if ($this->getProvidedValue() !== null) {
-            return $this->getProvidedValue();
-        }
-
-        return $this->getDefaultValue();
+        return $this->getProvidedValue() ?? $this->getDefaultValue();
     }
 
     /**

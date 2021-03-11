@@ -48,7 +48,7 @@ class Parameter
         return $this->parameters;
     }
 
-    /**
+    /*
      * Split the parameters into script name, command name, options and arguments.
      *
      * Flag options can be passed in a single set preceded by a dash:
@@ -95,7 +95,7 @@ class Parameter
         $this->options[$key] = $value;
     }
 
-    /**
+    /*
      * Parse a flag option string (-a or -abc, this last version
      * is parsed as a concatenated string of one char per option).
      */
@@ -117,7 +117,7 @@ class Parameter
         }
     }
 
-    /**
+    /*
      * Parse argument. If no command name set and commands are enabled,
      * interpret as command name. Otherwise, add to argument list.
      */
@@ -142,12 +142,13 @@ class Parameter
 
     /**
      * @param OptionParameter[] $options
+     * @throws ConsoleException
      */
     public function setCommandOptions(array $options): void
     {
         foreach ($options as $name => $option) {
             if ((!$option instanceof OptionParameter)) {
-                throw Exception::fromMessage(
+                throw ConsoleException::fromMessage(
                     "Options must be instances of Parameter\\Option. %s is not.",
                     $name
                 );
@@ -169,12 +170,13 @@ class Parameter
             } else {
                 $parameters = $this->options;
             }
+
             $option->addParameters($parameters);
 
             if ($option->isValueRequired() && $option->hasBeenProvided() && !$option->getValue()) {
                 $dashes = $option->isFlagOption() ? '-' : '--';
 
-                throw Exception::fromMessage(
+                throw ConsoleException::fromMessage(
                     "Option '%s%s' requires a value, which is not provided.",
                     $dashes,
                     $option->getName()
@@ -183,8 +185,9 @@ class Parameter
         }
     }
 
-    /**
-     * Returns null if the value doesn't exist. Otherwise, it's whatever was passed to it or set
+    /*
+     * Returns null if the value doesn't exist. Returns true if the option was provided
+     * but no value was provided. Otherwise, it's whatever was passed to it or set
      * as a default value.
      */
     public function getOption(string $name)
@@ -195,7 +198,10 @@ class Parameter
 
         $option = $this->commandOptions[$name];
 
-        if ($option->hasBeenProvided() && $option->getProvidedValue() === null && $option->getDefaultValue() === null) {
+        if ($option->hasBeenProvided()
+            && $option->getProvidedValue() === null
+            && $option->getDefaultValue() === null
+        ) {
             return true;
         }
 
@@ -205,11 +211,13 @@ class Parameter
     public function getOptions(): array
     {
         $returnArray = [];
+
         foreach ($this->commandOptions as $option) {
             $optionName = $option->getName();
 
             $returnArray[$optionName] = $this->getOption($optionName);
         }
+
         return $returnArray;
     }
 
@@ -217,13 +225,15 @@ class Parameter
      * Set the arguments from a command.
      *
      * @param ArgumentParameter[] $arguments
+     * @throws ConsoleException
      */
     public function setCommandArguments(array $arguments): void
     {
         $orderedArguments = [];
+
         foreach ($arguments as $index => $argument) {
             if (!($argument instanceof ArgumentParameter)) {
-                throw Exception::fromMessage(
+                throw ConsoleException::fromMessage(
                     "Arguments must be instances of Parameter\\Argument. The item at index %d is not.",
                     $index
                 );
@@ -232,6 +242,7 @@ class Parameter
             $argument->setOrder($index);
             $orderedArguments[$index] = $argument;
         }
+
         $this->commandArguments = $orderedArguments;
     }
 
@@ -245,7 +256,7 @@ class Parameter
             $argument->addParameters($this->arguments);
 
             if ($argument->isRequired() && !$argument->hasBeenProvided()) {
-                throw Exception::fromMessage(
+                throw ConsoleException::fromMessage(
                     "Required argument with index #%d '%s' not provided.",
                     $index,
                     $argument->getName()
@@ -318,6 +329,7 @@ class Parameter
         if ($this->commandNameEnabled && $this->commandName) {
             array_unshift($this->arguments, $this->commandName);
         }
+
         $this->commandNameEnabled = false;
     }
 }

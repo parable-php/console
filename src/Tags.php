@@ -74,6 +74,7 @@ class Tags
         preg_match_all('/<(?!\/)(.|\n)*?>/', $string, $matches);
 
         $tags = [];
+
         foreach ($matches[0] as $tag) {
             $tags[] = trim($tag, '<>');
         }
@@ -85,29 +86,27 @@ class Tags
     {
         try {
             return $this->getCodeForPredefined($tag);
-        } catch (Throwable) {
-        }
+        } catch (Throwable) {}
 
         try {
             $tags = $this->getTagsForSet($tag);
-
-            $codes = '';
-
-            foreach ($tags as $tagFound) {
-                $codes .= $this->getCodeForPredefined($tagFound);
-            }
-
-            return $codes;
         } catch (Throwable) {
+            throw ConsoleException::fromMessage('No predefined or tag set found for <%s>.', $tag);
         }
 
-        throw Exception::fromMessage('No predefined or tag set found for <%s>.', $tag);
+        $codes = '';
+
+        foreach ($tags as $tagFound) {
+            $codes .= $this->getCodeForPredefined($tagFound);
+        }
+
+        return $codes;
     }
 
     protected function getCodeForPredefined(string $tag): string
     {
         if (!isset($this->predefinedTags[$tag])) {
-            throw Exception::fromMessage('Predefined tag <%s> not found.', $tag);
+            throw ConsoleException::fromMessage('Predefined tag <%s> not found.', $tag);
         }
 
         return $this->predefinedTags[$tag];
@@ -116,7 +115,7 @@ class Tags
     protected function getTagsForSet(string $tag): array
     {
         if (!isset($this->tagSets[$tag])) {
-            throw Exception::fromMessage('Tag set <%s> not found.', $tag);
+            throw ConsoleException::fromMessage('Tag set <%s> not found.', $tag);
         }
 
         return $this->tagSets[$tag];

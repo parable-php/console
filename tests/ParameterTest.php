@@ -2,7 +2,7 @@
 
 namespace Parable\Console\Tests;
 
-use Parable\Console\Exception;
+use Parable\Console\ConsoleException;
 use Parable\Console\Parameter;
 use Parable\Console\Parameters\ArgumentParameter;
 use Parable\Console\Parameters\OptionParameter;
@@ -95,7 +95,7 @@ class ParameterTest extends AbstractTestClass
 
     public function testThrowsExceptionWhenOptionIsGivenButValueRequiredNotGiven(): void
     {
-        $this->expectException(Exception::class);
+        $this->expectException(ConsoleException::class);
         $this->expectExceptionMessage("Option '--option' requires a value, which is not provided.");
 
         $this->parameter->setParameters([
@@ -116,7 +116,7 @@ class ParameterTest extends AbstractTestClass
 
     public function testThrowsExceptionWhenFlagOptionIsGivenButValueRequiredNotGiven(): void
     {
-        $this->expectException(Exception::class);
+        $this->expectException(ConsoleException::class);
         $this->expectExceptionMessage("Option '-a' requires a value, which is not provided.");
 
         $this->parameter->setParameters([
@@ -158,7 +158,7 @@ class ParameterTest extends AbstractTestClass
 
     public function testRequiredArgumentThrowsException(): void
     {
-        $this->expectException(Exception::class);
+        $this->expectException(ConsoleException::class);
         $this->expectExceptionMessage("Required argument with index #1 'numero2' not provided.");
 
         $this->parameter->setParameters([
@@ -278,7 +278,7 @@ class ParameterTest extends AbstractTestClass
 
     public function testSetCommandOptionsWithArrayThrowsException(): void
     {
-        $this->expectException(Exception::class);
+        $this->expectException(ConsoleException::class);
         $this->expectExceptionMessage("Options must be instances of Parameter\Option. invalid_option is not.");
 
         $this->parameter->setCommandOptions(["invalid_option" => []]);
@@ -286,7 +286,7 @@ class ParameterTest extends AbstractTestClass
 
     public function testSetCommandArgumentsWithArrayThrowsException(): void
     {
-        $this->expectException(Exception::class);
+        $this->expectException(ConsoleException::class);
         $this->expectExceptionMessage("Arguments must be instances of Parameter\Argument. The item at index 0 is not.");
 
         $this->parameter->setCommandArguments([[]]);
@@ -340,7 +340,7 @@ class ParameterTest extends AbstractTestClass
 
     public function testParameterRequiredOnlyAcceptConstantValues(): void
     {
-        $this->expectException(Exception::class);
+        $this->expectException(ConsoleException::class);
         $this->expectExceptionMessage("Required must be one of the PARAMETER_* constants.");
 
         new ArgumentParameter("test", 418);
@@ -348,7 +348,7 @@ class ParameterTest extends AbstractTestClass
 
     public function testParameterValueRequiredOnlyAcceptConstantValues(): void
     {
-        $this->expectException(Exception::class);
+        $this->expectException(ConsoleException::class);
         $this->expectExceptionMessage("Value type must be one of the OPTION_* constants.");
 
         new OptionParameter(
@@ -553,7 +553,7 @@ class ParameterTest extends AbstractTestClass
 
     public function testFlagOptionCanOnlyHaveSingleLetterName(): void
     {
-        $this->expectException(Exception::class);
+        $this->expectException(ConsoleException::class);
         $this->expectExceptionMessage('Flag options can only have a single-letter name.');
 
         new OptionParameter("test", Parameter::OPTION_VALUE_OPTIONAL, null, true);

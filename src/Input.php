@@ -6,8 +6,7 @@ class Input
 {
     public function __construct(
         protected Environment $environment
-    ) {
-    }
+    ) {}
 
     public function get(): string
     {
@@ -36,7 +35,7 @@ class Input
     public function getHidden(): string
     {
         if ($this->environment->isWindows()) {
-            throw Exception::fromMessage("Hidden input is not supported on windows.");
+            throw ConsoleException::fromMessage("Hidden input is not supported on windows.");
         }
 
         $this->disableShowInput();

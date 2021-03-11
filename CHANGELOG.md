@@ -1,5 +1,13 @@
 # Parable Console
 
+## 0.6.0
+
+_Changes_
+- Add static analysis using psalm.
+- `Output::writelns(string ...$lines)` now takes multiple string values instead of an array of those.
+- `Exception` has been renamed to `ConsoleException` for clarity.
+- Multiple small code changes to make it more php8.
+
 ## 0.5.1
 
 _Changes_

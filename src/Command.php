@@ -110,10 +110,16 @@ class Command
 
     public function run(): void
     {
-        $callable = $this->getCallable();
-        if (is_callable($callable)) {
-            $callable($this->application, $this->output, $this->input, $this->parameter);
+        if ($this->getCallable() === null) {
+            return;
         }
+
+        ($this->getCallable())(
+            $this->application,
+            $this->output,
+            $this->input,
+            $this->parameter
+        );
     }
 
     /**

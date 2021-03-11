@@ -9,8 +9,7 @@ class Output
     public function __construct(
         protected Environment $environment,
         protected Tags $tags
-    ) {
-    }
+    ) {}
 
     public function write(string $string): void
     {
@@ -27,7 +26,7 @@ class Output
         $this->newline();
     }
 
-    public function writelns(array $lines): void
+    public function writelns(string ...$lines): void
     {
         foreach ($lines as $line) {
             $this->writeln($line);
@@ -142,8 +141,10 @@ class Output
 
         $actualLines = [];
         foreach ($lines as $line) {
-            $actualLines = array_merge($actualLines, explode("\n", $line));
+            $actualLines[] = explode("\n", $line);
         }
+
+        $actualLines = array_merge([], ...$actualLines);
 
         foreach ($actualLines as $line) {
             $strlen = max($strlen, mb_strlen($line));
@@ -188,6 +189,6 @@ class Output
         );
         $outputLines[] = "";
 
-        $this->writelns($outputLines);
+        $this->writelns(...$outputLines);
     }
 }

@@ -8,7 +8,10 @@ use Throwable;
 class Application
 {
     protected ?string $name = null;
+    /** @var Command[] */
     protected array $commands = [];
+    /** @var string[] */
+    protected array $commandNames = [];
     protected ?Command $activeCommand;
     protected ?string $defaultCommand = null;
     protected bool $onlyUseDefaultCommand = false;
@@ -23,7 +26,10 @@ class Application
             $this->output->writeErrorBlock([$e->getMessage()]);
 
             if ($this->activeCommand) {
-                $this->output->writeln('<yellow>Usage</yellow>: ' . $this->getCommandUsage($this->activeCommand));
+                $this->output->writeln(sprintf(
+                    '<yellow>Usage</yellow>: %s',
+                    $this->getCommandUsage($this->activeCommand)
+                ));
             }
         });
     }
@@ -46,7 +52,7 @@ class Application
 
     public function addCommandByNameAndClass(string $commandName, string $className): void
     {
-        $this->commands[$commandName] = $className;
+        $this->commandNames[$commandName] = $className;
     }
 
     /**
@@ -82,7 +88,8 @@ class Application
 
     public function hasCommand(string $commandName): bool
     {
-        return isset($this->commands[$commandName]);
+        return isset($this->commands[$commandName])
+            || isset($this->commandNames[$commandName]);
     }
 
     public function getCommand(string $commandName): ?Command
@@ -91,8 +98,10 @@ class Application
             return null;
         }
 
-        if (is_string($this->commands[$commandName])) {
-            $this->addCommand($this->container->get($this->commands[$commandName]));
+        if (isset($this->commandNames[$commandName]) && !isset($this->commands[$commandName])) {
+            /** @var Command $command */
+            $command = $this->container->get($this->commandNames[$commandName]);
+            $this->addCommand($command);
         }
 
         return $this->commands[$commandName];
@@ -174,7 +183,7 @@ class Application
         $command = $command ?: $defaultCommand;
 
         if (!$command) {
-            throw Exception::fromMessage('No valid commands found.');
+            throw ConsoleException::fromMessage('No valid commands found.');
         }
 
         if (!$command->isPrepared()) {

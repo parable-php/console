@@ -2,7 +2,7 @@
 
 namespace Parable\Console\Parameters;
 
-use Parable\Console\Exception;
+use Parable\Console\ConsoleException;
 use Parable\Console\Parameter;
 
 class ArgumentParameter extends AbstractParameter
@@ -30,7 +30,7 @@ class ArgumentParameter extends AbstractParameter
             ],
             true
         )) {
-            throw Exception::fromMessage('Required must be one of the PARAMETER_* constants.');
+            throw ConsoleException::fromMessage('Required must be one of the PARAMETER_* constants.');
         }
 
         $this->required = $required;

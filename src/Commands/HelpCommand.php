@@ -37,6 +37,7 @@ class HelpCommand extends Command
         $longestName = 0;
         foreach ($this->application->getCommands() as $command) {
             $strlen = strlen($command->getName());
+
             if ($strlen > $longestName) {
                 $longestName = $strlen;
             }

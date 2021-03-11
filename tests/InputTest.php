@@ -3,7 +3,7 @@
 namespace Parable\Console\Tests;
 
 use Parable\Console\Environment;
-use Parable\Console\Exception;
+use Parable\Console\ConsoleException;
 use Parable\Console\Input;
 use PHPUnit\Framework\MockObject\MockObject;
 
@@ -87,7 +87,7 @@ class InputTest extends AbstractTestClass
 
     public function testGetHiddenThrowsOnWindows(): void
     {
-        $this->expectException(Exception::class);
+        $this->expectException(ConsoleException::class);
         $this->expectExceptionMessage('Hidden input is not supported on windows.');
 
         $this->createInput(true);

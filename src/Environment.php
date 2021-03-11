@@ -13,6 +13,7 @@ class Environment
             return self::TERMINAL_DEFAULT_WIDTH;
         }
 
+        /** @psalm-suppress ForbiddenCode */
         return (int)shell_exec('TERM=ansi tput cols');
     }
 
@@ -22,6 +23,7 @@ class Environment
             return self::TERMINAL_DEFAULT_HEIGHT;
         }
 
+        /** @psalm-suppress ForbiddenCode */
         return (int)shell_exec('TERM=ansi tput lines');
     }
 

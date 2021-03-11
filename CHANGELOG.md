@@ -1,5 +1,10 @@
 # Parable Console
 
+## 0.6.1
+
+_Changes_
+- Small bugfix that crept up after splitting named commands and instantiated ones.
+
 ## 0.6.0
 
 _Changes_

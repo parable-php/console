@@ -102,6 +102,9 @@ class Application
             /** @var Command $command */
             $command = $this->container->get($this->commandNames[$commandName]);
             $this->addCommand($command);
+
+            // Since we've instantiated now, we can lose the reference to the name alone
+            unset($this->commandNames[$commandName]);
         }
 
         return $this->commands[$commandName];
@@ -114,17 +117,20 @@ class Application
     {
         $commands = [];
 
-        foreach ($this->commands as $commandName => $command) {
+        foreach ($this->commandNames as $commandName => $className) {
             $commands[$commandName] = $this->getCommand($commandName);
         }
 
-        return array_filter($commands);
+        return array_filter(array_merge($this->commands, $commands));
     }
 
     public function removeCommandByName(string $commandName): void
     {
         if ($this->hasCommand($commandName)) {
-            unset($this->commands[$commandName]);
+            unset(
+                $this->commands[$commandName],
+                $this->commandNames[$commandName]
+            );
         }
     }
 

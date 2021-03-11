@@ -98,6 +98,20 @@ class ApplicationTest extends AbstractTestClass
         self::assertSame('OK2', ValueClass::get());
     }
 
+    public function testGetCommandsGetsBothInstantiatedAndCommandNames(): void
+    {
+        $application = $this->container->buildAll(Application::class);
+
+        $application->addCommand($this->command1);
+        $application->addCommandByNameAndClass('test-command', TestCommand::class);
+
+        self::assertCount(2, $application->getCommands());
+
+        foreach ($application->getCommands() as $commandName => $command) {
+            self::assertInstanceOf(Command::class, $command);
+        }
+    }
+
     public function testAddCommand(): void
     {
         self::assertFalse($this->container->has(TestCommand::class));

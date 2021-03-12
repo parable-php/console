@@ -1,5 +1,9 @@
 # Parable Console
 
+## 1.0.0
+
+Just a re-release locking the interface in place. First final release!
+
 ## 0.6.1
 
 _Changes_

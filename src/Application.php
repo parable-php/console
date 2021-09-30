@@ -12,7 +12,7 @@ class Application
     protected array $commands = [];
     /** @var string[] */
     protected array $commandNames = [];
-    protected ?Command $activeCommand;
+    protected ?Command $activeCommand = null;
     protected ?string $defaultCommand = null;
     protected bool $onlyUseDefaultCommand = false;
 

@@ -8,7 +8,7 @@ use Parable\Console\Parameter;
 class ArgumentParameter extends AbstractParameter
 {
     protected int $required;
-    protected ?int $order;
+    protected ?int $order = null;
 
     public function __construct(
         string $name,

@@ -1,5 +1,9 @@
 # Parable Console
 
+## 1.0.1
+
+- Make sure that all nullable property values are set to `null` explicitly.
+
 ## 1.0.0
 
 Just a re-release locking the interface in place. First final release!

@@ -15,8 +15,8 @@ class Parameter
 
     /** @var string[] */
     protected array $parameters = [];
-    protected ?string $scriptName;
-    protected ?string $commandName;
+    protected ?string $scriptName = null;
+    protected ?string $commandName = null;
     protected array $options = [];
     protected array $flagOptions = [];
     protected array $arguments = [];

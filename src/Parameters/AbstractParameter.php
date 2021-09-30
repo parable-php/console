@@ -4,7 +4,7 @@ namespace Parable\Console\Parameters;
 
 abstract class AbstractParameter
 {
-    protected ?string $name;
+    protected ?string $name = null;
     protected mixed $defaultValue;
     protected bool $hasBeenProvided = false;
     protected ?string $providedValue = null;
